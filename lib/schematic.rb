@@ -1,0 +1,3 @@
+module Schematic
+  # Your code goes here...
+end
