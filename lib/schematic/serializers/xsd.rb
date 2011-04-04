@@ -29,9 +29,10 @@ module Schematic
           end
           builder.xs :complexType, "name" => xsd_type_name do |complex_type|
             additional_methods = xsd_methods.merge(options[:methods] || {})
+            ignored_methods = xsd_ignore_methods | (options[:exclude] || [])
             complex_type.xs :all do |all|
               xsd_columns.each do |column|
-                next if additional_methods.keys.map(&:to_s).include?(column.name)
+                next if additional_methods.keys.map(&:to_s).include?(column.name) || ignored_methods.map(&:to_s).include?(column.name)
 
                 all.xs :element, "name" => column.name.dasherize, "minOccurs" => xsd_minimum_occurrences_for_column(column), "maxOccurs" => "1" do |field|
                   field.xs :complexType do |complex_type|
@@ -79,6 +80,10 @@ module Schematic
 
       def xsd_methods
         {}
+      end
+
+      def xsd_ignore_methods
+        []
       end
 
       def xsd_nested_attributes

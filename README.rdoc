@@ -31,6 +31,14 @@ You can include additional elements by defining a ".xsd_methods" on your class:
     end
   end
 
+You can exclude elements bby defining a ".xsd_ignore_methods" on your class:
+
+  class Post < ActiveRecord::Base
+    def self.xsd_ignore_methods
+      [:created_at, :updated_at]
+    end
+  end
+
 == REQUIREMENTS
 
 * ActiveRecord 3.x

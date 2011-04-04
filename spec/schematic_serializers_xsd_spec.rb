@@ -231,6 +231,59 @@ describe Schematic::Serializers::Xsd do
     end
   end
 
+  describe ".xsd_methods" do
+    with_model :some_model do
+      table {}
+
+      model do
+        def self.xsd_methods
+          {:foo_bar => nil}
+        end
+      end
+    end
+
+    it "should include the additional method" do
+      xsd = generate_xsd_for_model(SomeModel) do
+        <<-XML
+        <xs:element name="id" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:integer">
+                <xs:attribute name="type" type="xs:string" use="optional"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="foo-bar" minOccurs="0" maxOccurs="1"/>
+        XML
+      end
+
+      SomeModel.to_xsd.should == sanitize_xml(xsd)
+    end
+  end
+
+
+  describe ".xsd_ignore_methods" do
+    with_model :some_model do
+      table :id => false do |t|
+        t.string :title
+      end
+
+      model do
+        def self.xsd_ignore_methods
+          [:title]
+        end
+      end
+    end
+
+    it "should exclude the methods" do
+      xsd = generate_xsd_for_model(SomeModel) do
+      end
+
+      SomeModel.to_xsd.should == sanitize_xml(xsd)
+    end
+  end
+
   describe ".xsd_minimum_occurrences_for" do
 
     context "given a column with no validations" do
