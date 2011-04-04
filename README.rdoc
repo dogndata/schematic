@@ -1,3 +1,41 @@
 = Schematic
 
-Automatic schema generation.
+* http://github.com/casecommons/schematic/
+
+== DESCRIPTION
+
+Automatic XSD generation for your ActiveRecord models 
+
+== INSTALL
+
+Add schematic to your Gemfile
+
+  gem 'schematic'
+
+Then run:
+
+  $ bundle install
+
+== USAGE
+  
+  class Post < ActiveRecord::Base
+  end
+
+  Post.to_xsd => (a bunch of xml)
+
+You can include additional elements by defining a ".xsd_methods" on your class:
+
+  class Post < ActiveRecord::Base
+    def self.xsd_methods
+      {:title => nil, :author => [:name, :email, :url]}
+    end
+  end
+
+== REQUIREMENTS
+
+* ActiveRecord 3.x
+
+== LICENSE
+
+MIT
+
