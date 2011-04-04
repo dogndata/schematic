@@ -1,5 +1,6 @@
 require "active_record"
 require "with_model"
+require "nokogiri"
 require "schematic"
 
 RSpec.configure do |config|
