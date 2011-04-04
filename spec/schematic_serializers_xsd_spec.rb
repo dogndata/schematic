@@ -130,7 +130,7 @@ describe Schematic::Serializers::Xsd do
         end
 
         it "should include the additional method" do
-            xsd = generate_xsd_for_model(SomeModel) do
+          xsd = generate_xsd_for_model(SomeModel) do
             <<-XML
               <xs:element name="id" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
@@ -156,12 +156,68 @@ describe Schematic::Serializers::Xsd do
     end
 
     context "with a model with validations" do
-      context "presence of validation" do
-        context "when allow blank is true" do
+      subject { SomeModel.to_xsd }
 
+      context "presence of validation" do
+
+        context "when allow blank is true" do
+          with_model :some_model do
+            table :id => false do |t|
+              t.string "title"
+            end
+
+            model do
+              validate :title, :presence => true, :allow_blank => true
+            end
+          end
+
+          it "should mark that the field minimum occurrences is 0" do
+            xsd = generate_xsd_for_model(SomeModel) do
+              <<-XML
+              <xs:element name="title" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="type" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              XML
+            end
+
+            subject.should == sanitize_xml(xsd)
+          end
         end
 
         context "when allow blank is false" do
+          with_model :some_model do
+            table :id => false do |t|
+              t.string "title"
+            end
+
+            model do
+              validates :title, :presence => true
+            end
+          end
+
+          it "should mark that the field minimum occurrences is 1" do
+            xsd = generate_xsd_for_model(SomeModel) do
+              <<-XML
+              <xs:element name="title" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="type" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              XML
+            end
+
+            subject.should == sanitize_xml(xsd)
+          end
         end
       end
 
@@ -171,6 +227,52 @@ describe Schematic::Serializers::Xsd do
 
       describe "inclusion validation" do
 
+      end
+    end
+  end
+
+  describe ".xsd_minimum_occurrences_for" do
+
+    context "given a column with no validations" do
+      with_model :some_model do
+        table :id => false do |t|
+          t.string "title"
+        end
+        model {}
+      end
+
+      it "should return 0" do
+        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
+      end
+    end
+
+    context "given a column with presence of but allow blank" do
+      with_model :some_model do
+        table :id => false do |t|
+          t.string "title"
+        end
+        model do
+          validates :title, :presence => true, :allow_blank => true
+        end
+      end
+
+      it "should return 0" do
+        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
+      end
+    end
+
+    context "given a column with presence of and no allow blank" do
+      with_model :some_model do
+        table :id => false do |t|
+          t.string "title"
+        end
+        model do
+          validates :title, :presence => true
+        end
+      end
+
+      it "should return 1" do
+        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "1"
       end
     end
   end
@@ -185,18 +287,18 @@ describe Schematic::Serializers::Xsd do
     <<-XML
     <?xml version="1.0" encoding="UTF-8"?>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-      <xs:element name="#{model.xsd_element_collection_name}" type="#{model.xsd_type_collection_name}"/>
-      <xs:complexType name="#{model.xsd_type_collection_name}">
-        <xs:sequence>
-          <xs:element name="#{model.xsd_element_name}" type="#{model.xsd_type_name}" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="type" type="xs:string" fixed="array"/>
-      </xs:complexType>
-      <xs:complexType name="#{model.xsd_type_name}">
-        <xs:all>
-          #{yield}
-        </xs:all>
-      </xs:complexType>
+    <xs:element name="#{model.xsd_element_collection_name}" type="#{model.xsd_type_collection_name}"/>
+    <xs:complexType name="#{model.xsd_type_collection_name}">
+    <xs:sequence>
+    <xs:element name="#{model.xsd_element_name}" type="#{model.xsd_type_name}" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string" fixed="array"/>
+    </xs:complexType>
+    <xs:complexType name="#{model.xsd_type_name}">
+    <xs:all>
+    #{yield}
+    </xs:all>
+    </xs:complexType>
     </xs:schema>
     XML
   end

@@ -33,7 +33,7 @@ module Schematic
               xsd_columns.each do |column|
                 next if additional_methods.keys.map(&:to_s).include?(column.name)
 
-                all.xs :element, "name" => column.name.dasherize, "minOccurs" => "0", "maxOccurs" => "1" do |field|
+                all.xs :element, "name" => column.name.dasherize, "minOccurs" => xsd_minimum_occurrences_for_column(column), "maxOccurs" => "1" do |field|
                   field.xs :complexType do |complex_type|
                     complex_type.xs :simpleContent do |simple_content|
                       simple_content.xs :extension, "base" => map_column_type_to_xsd_type(column) do |extension|
@@ -67,6 +67,14 @@ module Schematic
           end
           builder
         end
+      end
+
+      def xsd_minimum_occurrences_for_column(column)
+        self._validators[column.name.to_sym].each do |column_validation|
+          next unless column_validation.is_a?  ActiveModel::Validations::PresenceValidator
+          return "1" if column_validation.options[:allow_blank] != true
+        end
+        "0"
       end
 
       def xsd_methods
