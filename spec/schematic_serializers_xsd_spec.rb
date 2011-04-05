@@ -304,6 +304,36 @@ describe Schematic::Serializers::Xsd do
             subject.should == sanitize_xml(xsd)
           end
         end
+
+        context "when there is a condition" do
+          with_model :some_model do
+            table :id => false do |t|
+              t.string "title"
+            end
+
+            model do
+              validates :title, :presence => true, :if => lambda { |model| false }
+            end
+          end
+
+          it "should mark that the field minimum occurrences is 0" do
+            xsd = generate_xsd_for_model(SomeModel) do
+              <<-XML
+              <xs:element name="title" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="type" type="xs:string" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              XML
+            end
+
+            subject.should == sanitize_xml(xsd)
+          end
+        end
       end
 
       describe "length validation" do
