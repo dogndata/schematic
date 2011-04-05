@@ -109,7 +109,7 @@ module Schematic
       end
 
       def xsd_type_name
-        self.name
+        self.name.demodulize
       end
 
       def xsd_type_collection_name
@@ -117,7 +117,7 @@ module Schematic
       end
 
       def xsd_element_name
-        self.name.underscore.dasherize
+        xsd_type_name.underscore.dasherize
       end
 
       def xsd_element_collection_name

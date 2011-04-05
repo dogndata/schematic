@@ -39,31 +39,67 @@ describe Schematic::Serializers::Xsd do
   describe ".to_xsd" do
 
     context "XSD validation" do
-      subject { SomeModel.to_xsd }
+      context "when the model is not namespaced" do
+        subject { SomeModel.to_xsd }
 
-      with_model :some_model do
-        table do |t|
-          t.string "some_string"
-          t.float "some_float"
-          t.datetime "some_datetime"
-          t.date "some_date"
-          t.boolean "some_boolean"
+        with_model :some_model do
+          table do |t|
+            t.string "some_string"
+            t.float "some_float"
+            t.datetime "some_datetime"
+            t.date "some_date"
+            t.boolean "some_boolean"
+          end
+
+          model do
+            validates :some_string, :presence => true
+            validates :some_date, :presence => true, :allow_blank => true
+            validates :some_datetime, :presence => true, :allow_blank => false
+          end
+
         end
+        it "should generate a valid XSD" do
+          xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
+          meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
 
-        model do
-          validates :some_string, :presence => true
-          validates :some_date, :presence => true, :allow_blank => true
-          validates :some_datetime, :presence => true, :allow_blank => false
+          doc = Nokogiri::XML.parse(subject)
+          meta_xsd.validate(doc).each do |error|
+            error.message.should be_nil
+          end
         end
-
       end
-      it "should generate a valid XSD" do
-        xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
-        meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
 
-        doc = Nokogiri::XML.parse(subject)
-        meta_xsd.validate(doc).each do |error|
-          error.message.should be_nil
+      context "when the model is namespaced" do
+        before do
+          module Namespace; end
+        end
+
+        subject { Namespace::SomeModel.to_xsd }
+
+        with_model :some_model do
+          table do |t|
+            t.string "some_string"
+          end
+
+          model do
+            validates :some_string, :presence => true
+          end
+
+        end
+
+        before do
+          class Namespace::SomeModel < SomeModel
+          end
+        end
+
+        it "should generate a valid XSD" do
+          xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
+          meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
+
+          doc = Nokogiri::XML.parse(subject)
+          meta_xsd.validate(doc).each do |error|
+            error.message.should be_nil
+          end
         end
       end
     end
