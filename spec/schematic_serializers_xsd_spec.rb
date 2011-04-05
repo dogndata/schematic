@@ -59,13 +59,7 @@ describe Schematic::Serializers::Xsd do
 
         end
         it "should generate a valid XSD" do
-          xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
-          meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
-
-          doc = Nokogiri::XML.parse(subject)
-          meta_xsd.validate(doc).each do |error|
-            error.message.should be_nil
-          end
+          validate_xsd(subject)
         end
       end
 
@@ -93,14 +87,69 @@ describe Schematic::Serializers::Xsd do
         end
 
         it "should generate a valid XSD" do
-          xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
-          meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
+          validate_xsd(subject)
+        end
+      end
 
-          doc = Nokogiri::XML.parse(subject)
-          meta_xsd.validate(doc).each do |error|
-            error.message.should be_nil
+      context "when the model has a nested attribute on a subclass with a reference to the superclass" do
+        with_model :parent do
+          table {}
+          model do
+            has_many :children
+            accepts_nested_attributes_for :children
           end
         end
+
+        with_model :child do
+          table do |t|
+            t.integer :parent_id
+          end
+
+          model do
+            belongs_to :parent
+          end
+        end
+
+        before do
+          module Namespace; end
+          class Namespace::Child < Child
+            accepts_nested_attributes_for :parent
+          end
+        end
+
+        subject { Namespace::Child.to_xsd }
+
+        it "should generate a valid XSD" do
+          validate_xsd(subject)
+        end
+      end
+
+      context "when the model has a circular nested attribute reference" do
+        with_model :blog do
+          table {}
+          model do
+            has_many :posts
+            accepts_nested_attributes_for :posts
+          end
+        end
+
+        with_model :post do
+          table do |t|
+            t.integer :blog_id
+          end
+
+          model do
+            belongs_to :blog
+            accepts_nested_attributes_for :blog
+          end
+        end
+
+        subject { Post.to_xsd }
+
+        it "should generate a valid XSD" do
+          validate_xsd(subject)
+        end
+
       end
     end
 
@@ -367,6 +416,16 @@ describe Schematic::Serializers::Xsd do
   end
 
   private
+
+  def validate_xsd(xml)
+    xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
+    meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
+
+    doc = Nokogiri::XML.parse(xml)
+    meta_xsd.validate(doc).each do |error|
+      error.message.should be_nil
+    end
+  end
 
   def sanitize_xml(xml)
     xml.split("\n").map(&:strip).join("")

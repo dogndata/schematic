@@ -13,7 +13,7 @@ module Schematic
         builder.instruct!
         builder.xs :schema, "xmlns:xs" => "http://www.w3.org/2001/XMLSchema" do |schema|
           schema.xs :element, "name" => xsd_element_collection_name, "type" => xsd_type_collection_name
-          generate_xsd(options, schema)
+          generate_xsd(options, schema, self)
         end
         output
       end
@@ -50,21 +50,22 @@ module Schematic
         self.name.demodulize
       end
 
-
       def xsd_element_name
         xsd_type_name.underscore.dasherize
       end
 
-      private
-
-      def generate_xsd(options = {}, builder)
+      def generate_xsd(options, builder, klass)
         xsd_nested_attributes.each do |nested_attribute|
-          nested_attribute.klass.to_xsd(options, builder)
+          next if nested_attribute.klass == klass || nested_attribute.klass == klass.superclass
+
+          nested_attribute.klass.generate_xsd(options, builder, klass)
         end
 
         generate_xsd_complex_type_for_collection(builder)
         generate_xsd_complex_type_for_model(options, builder)
       end
+
+      private
 
       def generate_xsd_complex_type_for_collection(builder)
         builder.xs :complexType, "name" => xsd_type_collection_name do |complex_type|
