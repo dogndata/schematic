@@ -58,7 +58,7 @@ describe Schematic::Serializers::Xsd do
 
             class << self
               def xsd_methods
-                {:foo => { :bar => { :baz => nil } } }
+                {:foo => { :bar => { :baz => nil }, :quz => [:qaz] } }
               end
             end
           end
@@ -238,10 +238,6 @@ describe Schematic::Serializers::Xsd do
 
           SomeModel.to_xsd(:methods => {:foo_bar => nil}).should == sanitize_xml(xsd)
         end
-      end
-
-      describe "nested attributes" do
-
       end
 
     end
@@ -446,10 +442,10 @@ describe Schematic::Serializers::Xsd do
             </xs:simpleContent>
           </xs:complexType>
         </xs:element>
-        <xs:element name="foo" minOccurs="0" maxOccurs="1">
+        <xs:element name="foo" minOccurs="0">
           <xs:complexType>
             <xs:all>
-              <xs:element name="bar" minOccurs="0" maxOccurs="1">
+              <xs:element name="bar" minOccurs="0">
                 <xs:complexType>
                   <xs:all>
                     <xs:element name="baz" minOccurs="0" maxOccurs="1"/>

@@ -112,7 +112,8 @@ module Schematic
         additional_methods.each do |method_name, values|
           method_xsd_name = method_name.to_s.dasherize
           if values.present?
-            builder.xs :element, "name" => method_xsd_name, "minOccurs" => "0", "maxOccurs" => "1" do |element|
+            max_occurrences = values.is_a?(Hash) ? {} : {"maxOccurs" => "1"}
+            builder.xs :element, {"name" => method_xsd_name, "minOccurs" => "0"}.merge(max_occurrences) do |element|
               element.xs :complexType do |complex_type|
                 complex_type.xs :all do |nested_all|
                   if values.is_a?(Array)
