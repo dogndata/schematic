@@ -115,8 +115,14 @@ module Schematic
             builder.xs :element, "name" => method_xsd_name, "minOccurs" => "0", "maxOccurs" => "1" do |element|
               element.xs :complexType do |complex_type|
                 complex_type.xs :all do |nested_all|
-                  values.each do |value|
-                    nested_all.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0"
+                  if values.is_a?(Array)
+                    values.each do |value|
+                      nested_all.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0"
+                    end
+                  elsif values.is_a?(Hash)
+                    generate_xsd_additional_methods(nested_all, values)
+                  else
+                    raise "Additional methods must be a hash of hashes or hash of arrays"
                   end
                 end
                 complex_type.xs :attribute, "name" => "type", "type" => "xs:string", "fixed" => "array", "use" => "optional"

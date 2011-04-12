@@ -55,6 +55,12 @@ describe Schematic::Serializers::Xsd do
             validates :some_string, :presence => true
             validates :some_date, :presence => true, :allow_blank => true
             validates :some_datetime, :presence => true, :allow_blank => false
+
+            class << self
+              def xsd_methods
+                {:foo => { :bar => { :baz => nil } } }
+              end
+            end
           end
 
         end
@@ -347,19 +353,20 @@ describe Schematic::Serializers::Xsd do
   end
 
   describe ".xsd_methods" do
-    with_model :some_model do
-      table {}
+    context "given a method" do
+      with_model :some_model do
+        table {}
 
-      model do
-        def self.xsd_methods
-          {:foo_bar => nil}
+        model do
+          def self.xsd_methods
+            {:foo_bar => nil}
+          end
         end
       end
-    end
 
-    it "should include the additional method" do
-      xsd = generate_xsd_for_model(SomeModel) do
-        <<-XML
+      it "should include the additional method" do
+        xsd = generate_xsd_for_model(SomeModel) do
+          <<-XML
         <xs:element name="id" minOccurs="0" maxOccurs="1">
           <xs:complexType>
             <xs:simpleContent>
@@ -370,10 +377,95 @@ describe Schematic::Serializers::Xsd do
           </xs:complexType>
         </xs:element>
         <xs:element name="foo-bar" minOccurs="0" maxOccurs="1"/>
-        XML
+          XML
+        end
+
+        SomeModel.to_xsd.should == sanitize_xml(xsd)
+      end
+    end
+
+    context "given a an array of methods" do
+      with_model :some_model do
+        table {}
+
+        model do
+          def self.xsd_methods
+            {:foo => [:bar, :baz]}
+          end
+        end
       end
 
-      SomeModel.to_xsd.should == sanitize_xml(xsd)
+      it "should include the additional methods" do
+        xsd = generate_xsd_for_model(SomeModel) do
+          <<-XML
+        <xs:element name="id" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:integer">
+                <xs:attribute name="type" type="xs:string" use="optional"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="foo" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="bar" minOccurs="0"/>
+              <xs:element name="baz" minOccurs="0"/>
+            </xs:all>
+            <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+          XML
+        end
+
+        SomeModel.to_xsd.should == sanitize_xml(xsd)
+      end
+    end
+
+    context "given nested methods" do
+      with_model :some_model do
+        table {}
+
+        model do
+          def self.xsd_methods
+            { :foo => { :bar => {:baz => nil } } }
+          end
+        end
+      end
+
+      it "should nested the additional methods" do
+        xsd = generate_xsd_for_model(SomeModel) do
+          <<-XML
+        <xs:element name="id" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:integer">
+                <xs:attribute name="type" type="xs:string" use="optional"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="foo" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:all>
+              <xs:element name="bar" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="baz" minOccurs="0" maxOccurs="1"/>
+                  </xs:all>
+                  <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:all>
+            <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+          XML
+        end
+
+        SomeModel.to_xsd.should == sanitize_xml(xsd)
+      end
     end
   end
 
