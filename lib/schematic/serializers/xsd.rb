@@ -154,7 +154,6 @@ module Schematic
         self.columns
       end
 
-
     end
   end
 end
