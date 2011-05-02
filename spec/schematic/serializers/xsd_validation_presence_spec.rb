@@ -21,9 +21,8 @@ describe Schematic::Serializers::Xsd do
               <xs:element name="title" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
+                    <xs:restriction base="String">
+                    </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
@@ -51,9 +50,8 @@ describe Schematic::Serializers::Xsd do
               <xs:element name="title" minOccurs="1" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
+                    <xs:restriction base="String">
+                    </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
@@ -81,9 +79,8 @@ describe Schematic::Serializers::Xsd do
               <xs:element name="title" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
+                    <xs:restriction base="String">
+                    </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>

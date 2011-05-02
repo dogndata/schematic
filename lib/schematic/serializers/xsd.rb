@@ -12,22 +12,11 @@ module Schematic
         builder = Builder::XmlMarkup.new(:target => output, :indent => 2)
         builder.instruct!
         builder.xs :schema, "xmlns:xs" => "http://www.w3.org/2001/XMLSchema" do |schema|
+          generate_complex_type_for_columns(schema)
           schema.xs :element, "name" => xsd_element_collection_name, "type" => xsd_type_collection_name
           generate_xsd(options, schema, self)
         end
         output
-      end
-
-      def map_column_type_to_xsd_type(column)
-        {
-          :integer => "xs:integer",
-          :float => "xs:float",
-          :string => "xs:string",
-          :text => "xs:string",
-          :datetime => "xs:dateTime",
-          :date => "xs:date",
-          :boolean => "xs:boolean"
-        }[column.type]
       end
 
       def xsd_minimum_occurrences_for_column(column)
@@ -99,12 +88,52 @@ module Schematic
           builder.xs :element, "name" => column.name.dasherize, "minOccurs" => xsd_minimum_occurrences_for_column(column), "maxOccurs" => "1" do |field|
             field.xs :complexType do |complex_type|
               complex_type.xs :simpleContent do |simple_content|
-                simple_content.xs :extension, "base" => map_column_type_to_xsd_type(column) do |extension|
-                  extension.xs :attribute, "name" => "type", "type" => "xs:string", "use" => "optional"
+                simple_content.xs :restriction, "base" => map_column_type_to_complex_type(column) do |restriction|
+                  generate_xsd_length_restriction_for_column(restriction, column)
                 end
               end
             end
           end
+        end
+      end
+
+      def generate_complex_type_for_columns(builder)
+        xsd_complex_types.each do |key, value|
+          complex_type_name = value[:complex_type]
+          xsd_type = value[:xsd_type]
+          builder.xs :complexType, "name" => complex_type_name do |complex_type|
+            complex_type.xs :simpleContent do |simple_content|
+              simple_content.xs :extension, "base" => xsd_type do |extension|
+                extension.xs :attribute, "name" => "type", "type" => "xs:string", "use" => "optional"
+              end
+            end
+          end
+        end
+      end
+
+      def xsd_complex_types
+        {
+          :integer => { :complex_type => "Integer", :xsd_type => "xs:integer" },
+          :float => { :complex_type => "Float", :xsd_type => "xs:float" },
+          :string => { :complex_type => "String", :xsd_type => "xs:string" },
+          :text => { :complex_type => "Text", :xsd_type => "xs:string" },
+          :datetime => { :complex_type => "DateTime", :xsd_type => "xs:dateTime" },
+          :date => { :complex_type => "Date", :xsd_type => "xs:date" },
+          :boolean => { :complex_type => "Boolean", :xsd_type => "xs:boolean" },
+        }
+      end
+
+      def map_column_type_to_complex_type(column)
+        xsd_complex_types[column.type][:complex_type]
+      end
+
+      def generate_xsd_length_restriction_for_column(builder, column)
+        self._validators[column.name.to_sym].each do |column_validation|
+          next unless column_validation.is_a?  ActiveModel::Validations::LengthValidator
+          next unless column_validation.options[:if].nil?
+          builder.xs(:maxLength, "value" => column_validation.options[:maximum]) if column_validation.options[:maximum]
+          builder.xs(:minLength, "value" => column_validation.options[:minimum]) if column_validation.options[:minimum]
+          return
         end
       end
 

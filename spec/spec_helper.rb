@@ -10,13 +10,19 @@ end
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ":memory:")
 
 def validate_xml_against_xsd(xml, xsd)
-  xsd =  Nokogiri::XML::Schema.read_memory(xsd)
+  require "tempfile"
+  tempfile = Tempfile.new("schematic")
+  tempfile << xsd
+  tempfile.rewind
+  xsd =  Nokogiri::XML::Schema(tempfile)
   doc = Nokogiri::XML.parse(xml)
   errors = []
   xsd.validate(doc).each do |error|
     errors << error.message
   end
   errors.should == []
+ensure
+  tempfile.close
 end
 
 def validate_xsd(xml)
@@ -37,6 +43,55 @@ def generate_xsd_for_model(model)
   output = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="Integer">
+  <xs:simpleContent>
+  <xs:extension base="xs:integer">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Float">
+  <xs:simpleContent>
+  <xs:extension base="xs:float">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="String">
+  <xs:simpleContent>
+  <xs:extension base="xs:string">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Text">
+  <xs:simpleContent>
+  <xs:extension base="xs:string">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DateTime">
+  <xs:simpleContent>
+  <xs:extension base="xs:dateTime">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Date">
+  <xs:simpleContent>
+  <xs:extension base="xs:date">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Boolean">
+  <xs:simpleContent>
+  <xs:extension base="xs:boolean">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
   <xs:element name="#{model.xsd_element_collection_name}" type="#{model.xsd_type_collection_name}"/>
   <xs:complexType name="#{model.xsd_type_collection_name}">
     <xs:sequence>

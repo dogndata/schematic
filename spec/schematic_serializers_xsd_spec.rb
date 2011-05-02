@@ -27,7 +27,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
-            validates :some_string, :presence => true
+            validates :some_string, :presence => true, :length => { :maximum => 100 }
             validates :some_date, :presence => true, :allow_blank => true
             validates :some_datetime, :presence => true, :allow_blank => false
 
@@ -52,7 +52,6 @@ describe Schematic::Serializers::Xsd do
                                    :some_float => 1.5,
                                    :some_integer => 2)
           xml = [instance].to_xml
-
           validate_xml_against_xsd(xml, subject)
         end
       end
@@ -154,6 +153,55 @@ describe Schematic::Serializers::Xsd do
         xsd = <<-XML
           <?xml version="1.0" encoding="UTF-8"?>
           <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType name="Integer">
+            <xs:simpleContent>
+            <xs:extension base="xs:integer">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="Float">
+            <xs:simpleContent>
+            <xs:extension base="xs:float">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="String">
+            <xs:simpleContent>
+            <xs:extension base="xs:string">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="Text">
+            <xs:simpleContent>
+            <xs:extension base="xs:string">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="DateTime">
+            <xs:simpleContent>
+            <xs:extension base="xs:dateTime">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="Date">
+            <xs:simpleContent>
+            <xs:extension base="xs:date">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
+            <xs:complexType name="Boolean">
+            <xs:simpleContent>
+            <xs:extension base="xs:boolean">
+            <xs:attribute name="type" type="xs:string" use="optional"/>
+            </xs:extension>
+            </xs:simpleContent>
+            </xs:complexType>
             <xs:element name="empty-models" type="EmptyModels"/>
             <xs:complexType name="EmptyModels">
               <xs:sequence>
@@ -189,9 +237,8 @@ describe Schematic::Serializers::Xsd do
               <xs:element name="some-float" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:float">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
+                    <xs:restriction base="Float">
+                    </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
@@ -214,9 +261,8 @@ describe Schematic::Serializers::Xsd do
               <xs:element name="id" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
-                    <xs:extension base="xs:integer">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
+                    <xs:restriction base="Integer">
+                    </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
