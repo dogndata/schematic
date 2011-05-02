@@ -10,32 +10,6 @@ describe Schematic::Serializers::Xsd do
     end
   end
 
-  describe ".extend" do
-    context "when the model inherits ActiveRecord::Base" do
-      subject { EmptyModel }
-
-      it "should allow the model to be extended" do
-        lambda {
-          subject.class_eval do
-          extend Schematic::Serializers::Xsd
-          end
-        }.should_not raise_error
-      end
-    end
-
-    context "when the model does not inherit ActiveRecord::Base" do
-      subject { Object }
-
-      it "should raise an exception" do
-        lambda {
-          subject.class_eval do
-          extend Schematic::Serializers::Xsd
-          end
-        }.should raise_error(Schematic::InvalidClass)
-      end
-    end
-  end
-
   describe ".to_xsd" do
 
     context "XSD validation" do
@@ -46,6 +20,7 @@ describe Schematic::Serializers::Xsd do
           table do |t|
             t.string "some_string"
             t.float "some_float"
+            t.integer "some_integer"
             t.datetime "some_datetime"
             t.date "some_date"
             t.boolean "some_boolean"
@@ -64,8 +39,21 @@ describe Schematic::Serializers::Xsd do
           end
 
         end
+
         it "should generate a valid XSD" do
           validate_xsd(subject)
+        end
+
+        it "should validate against it's own XSD" do
+          instance = SomeModel.new(:some_string => "ExampleString",
+                                   :some_date => Date.today,
+                                   :some_datetime => DateTime.new,
+                                   :some_boolean => true,
+                                   :some_float => 1.5,
+                                   :some_integer => 2)
+          xml = [instance].to_xml
+
+          validate_xml_against_xsd(xml, subject)
         end
       end
 
@@ -242,293 +230,6 @@ describe Schematic::Serializers::Xsd do
 
     end
 
-    context "with a model with validations" do
-      subject { sanitize_xml(SomeModel.to_xsd) }
-
-      context "presence of validation" do
-
-        context "when allow blank is true" do
-          with_model :some_model do
-            table :id => false do |t|
-              t.string "title"
-            end
-
-            model do
-              validate :title, :presence => true, :allow_blank => true
-            end
-          end
-
-          it "should mark that the field minimum occurrences is 0" do
-            xsd = generate_xsd_for_model(SomeModel) do
-              <<-XML
-              <xs:element name="title" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
-              XML
-            end
-
-            subject.should == xsd
-          end
-        end
-
-        context "when allow blank is false" do
-          with_model :some_model do
-            table :id => false do |t|
-              t.string "title"
-            end
-
-            model do
-              validates :title, :presence => true
-            end
-          end
-
-          it "should mark that the field minimum occurrences is 1" do
-            xsd = generate_xsd_for_model(SomeModel) do
-              <<-XML
-              <xs:element name="title" minOccurs="1" maxOccurs="1">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
-              XML
-            end
-
-            subject.should == xsd
-          end
-        end
-
-        context "when there is a condition" do
-          with_model :some_model do
-            table :id => false do |t|
-              t.string "title"
-            end
-
-            model do
-              validates :title, :presence => true, :if => lambda { |model| false }
-            end
-          end
-
-          it "should mark that the field minimum occurrences is 0" do
-            xsd = generate_xsd_for_model(SomeModel) do
-              <<-XML
-              <xs:element name="title" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                  <xs:simpleContent>
-                    <xs:extension base="xs:string">
-                      <xs:attribute name="type" type="xs:string" use="optional"/>
-                    </xs:extension>
-                  </xs:simpleContent>
-                </xs:complexType>
-              </xs:element>
-              XML
-            end
-
-            subject.should == xsd
-          end
-        end
-      end
-
-      describe "length validation" do
-
-      end
-
-      describe "inclusion validation" do
-
-      end
-    end
-  end
-
-  describe ".xsd_methods" do
-    context "given a method" do
-      with_model :some_model do
-        table {}
-
-        model do
-          def self.xsd_methods
-            {:foo_bar => nil}
-          end
-        end
-      end
-
-      it "should include the additional method" do
-        xsd = generate_xsd_for_model(SomeModel) do
-          <<-XML
-        <xs:element name="id" minOccurs="0" maxOccurs="1">
-          <xs:complexType>
-            <xs:simpleContent>
-              <xs:extension base="xs:integer">
-                <xs:attribute name="type" type="xs:string" use="optional"/>
-              </xs:extension>
-            </xs:simpleContent>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="foo-bar" minOccurs="0" maxOccurs="1"/>
-          XML
-        end
-
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
-      end
-    end
-
-    context "given a an array of methods" do
-      with_model :some_model do
-        table {}
-
-        model do
-          def self.xsd_methods
-            {:foo => [:bar]}
-          end
-        end
-      end
-
-      it "should include the additional methods" do
-        xsd = generate_xsd_for_model(SomeModel) do
-          <<-XML
-            <xs:element name="id" minOccurs="0" maxOccurs="1">
-              <xs:complexType>
-                <xs:simpleContent>
-                  <xs:extension base="xs:integer">
-                    <xs:attribute name="type" type="xs:string" use="optional"/>
-                  </xs:extension>
-                </xs:simpleContent>
-              </xs:complexType>
-            </xs:element>
-            <xs:element name="foo" minOccurs="0" maxOccurs="1">
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="bar" minOccurs="0" maxOccurs="unbounded"/>
-                </xs:sequence>
-                <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
-              </xs:complexType>
-            </xs:element>
-          XML
-        end
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
-      end
-    end
-
-    context "given nested methods" do
-      with_model :some_model do
-        table {}
-
-        model do
-          def self.xsd_methods
-            { :foo => { :bar => {:baz => nil } } }
-          end
-        end
-      end
-
-      it "should nested the additional methods" do
-        xsd = generate_xsd_for_model(SomeModel) do
-          <<-XML
-        <xs:element name="id" minOccurs="0" maxOccurs="1">
-          <xs:complexType>
-            <xs:simpleContent>
-              <xs:extension base="xs:integer">
-                <xs:attribute name="type" type="xs:string" use="optional"/>
-              </xs:extension>
-            </xs:simpleContent>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="foo" minOccurs="0" maxOccurs="1">
-          <xs:complexType>
-            <xs:all>
-              <xs:element name="bar" minOccurs="0" maxOccurs="1">
-                <xs:complexType>
-                  <xs:all>
-                    <xs:element name="baz" minOccurs="0" maxOccurs="1"/>
-                  </xs:all>
-                  <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
-                </xs:complexType>
-              </xs:element>
-            </xs:all>
-            <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
-          </xs:complexType>
-        </xs:element>
-          XML
-        end
-
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
-      end
-    end
-  end
-
-
-  describe ".xsd_ignore_methods" do
-    with_model :some_model do
-      table :id => false do |t|
-        t.string :title
-      end
-
-      model do
-        def self.xsd_ignore_methods
-          [:title]
-        end
-      end
-    end
-
-    it "should exclude the methods" do
-      xsd = generate_xsd_for_model(SomeModel) do
-      end
-
-      sanitize_xml(SomeModel.to_xsd).should eq(xsd)
-    end
-  end
-
-  describe ".xsd_minimum_occurrences_for" do
-
-    context "given a column with no validations" do
-      with_model :some_model do
-        table :id => false do |t|
-          t.string "title"
-        end
-        model {}
-      end
-
-      it "should return 0" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
-      end
-    end
-
-    context "given a column with presence of but allow blank" do
-      with_model :some_model do
-        table :id => false do |t|
-          t.string "title"
-        end
-        model do
-          validates :title, :presence => true, :allow_blank => true
-        end
-      end
-
-      it "should return 0" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
-      end
-    end
-
-    context "given a column with presence of and no allow blank" do
-      with_model :some_model do
-        table :id => false do |t|
-          t.string "title"
-        end
-        model do
-          validates :title, :presence => true
-        end
-      end
-
-      it "should return 1" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "1"
-      end
-    end
   end
 
 end
