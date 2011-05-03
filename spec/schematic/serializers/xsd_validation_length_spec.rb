@@ -2,6 +2,58 @@ require "spec_helper"
 
 describe Schematic::Serializers::Xsd do
   describe ".to_xsd" do
+    context "with a model with range length validations" do
+      subject { sanitize_xml(LengthModelRange.to_xsd) }
+      with_model :length_model_range do
+        table :id => false do |t|
+          t.string "title"
+        end
+
+        model do
+          validates :title, :length => { :within => 10..20 }
+        end
+      end
+
+      it "should validate against it's own XSD" do
+        invalid_instance = LengthModelRange.new(:title => "A" * 9)
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+        invalid_instance = LengthModelRange.new(:title => "A" * 21)
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+      end
+    end
+
+    context "with a model with using the range alias length validations" do
+      subject { sanitize_xml(LengthModelRange.to_xsd) }
+      with_model :length_model_range do
+        table :id => false do |t|
+          t.string "title"
+        end
+
+        model do
+          validates :title, :length => { :in => 10..20 }
+        end
+      end
+
+      it "should validate against it's own XSD" do
+        invalid_instance = LengthModelRange.new(:title => "A" * 9)
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+        invalid_instance = LengthModelRange.new(:title => "A" * 21)
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+      end
+    end
+
     context "with a model with minimum length validations" do
       subject { sanitize_xml(LengthModelMinimum.to_xsd) }
       with_model :length_model_minimum do
@@ -71,7 +123,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
-            validates :title, :length => { :maximum => 100 }
+            validates :title, :length => { :maximum => 100 }, :allow_blank => false
           end
         end
 
