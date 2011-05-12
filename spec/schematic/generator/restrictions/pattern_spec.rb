@@ -45,6 +45,32 @@ describe Schematic::Generator::Restrictions::Enumeration do
         subject.should == xsd
       end
     end
+
+    context "with a model with a complex format" do
+      subject { sanitize_xml(PatternModel.to_xsd) }
+      with_model :pattern_model do
+        table :id => false do |t|
+          t.string "email"
+        end
+
+        model do
+          validates :email, :format => { :with => /\A([\w\.%\+\-`']+)@([\w\-]+\.)+([\w]{2,})\Z/ }
+        end
+      end
+
+      it "should validate against it's own XSD" do
+        invalid_instance = PatternModel.new(:email => "@blah")
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+        valid_instance = PatternModel.new(:email => "foo@bar.com")
+        xml = [valid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should_not raise_error
+      end
+    end
   end
 end
 

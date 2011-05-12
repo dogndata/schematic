@@ -9,7 +9,12 @@ module Schematic
 
         def generate(builder)
           for_validator ActiveModel::Validations::FormatValidator do |validator|
-            builder.xs(:pattern, "value" => validator.options[:with].source) if validator.options[:with]
+            if pattern = validator.options[:with]
+              value = pattern.source
+              value.gsub!(/^(?:\^|\\A|\\a)?/, '')
+              value.gsub!(/(?:\$|\\Z|\\z)?$/, '')
+              builder.xs(:pattern, "value" => value)
+            end
           end
         end
       end
