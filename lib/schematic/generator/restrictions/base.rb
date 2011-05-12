@@ -8,12 +8,16 @@ module Schematic
         end
 
         def for_validator(validator_klass)
-          @klass._validators[@column.name.to_sym].each do |column_validation|
+          validators_for_column.each do |column_validation|
             next unless column_validation.is_a? validator_klass
             next unless column_validation.options[:if].nil?
             yield(column_validation)
             return
           end
+        end
+
+        def validators_for_column
+          @klass._validators[@column.name.to_sym]
         end
 
       end
