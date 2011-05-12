@@ -2,11 +2,6 @@ module Schematic
   module Generator
     module Restrictions
       class Length < Base
-        def initialize(klass, column)
-          @klass = klass
-          @column = column
-        end
-
         def generate(builder)
           for_validator ActiveModel::Validations::LengthValidator do |validator|
             builder.xs(:maxLength, "value" => validator.options[:maximum]) if validator.options[:maximum]
