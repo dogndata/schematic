@@ -6,11 +6,11 @@ describe Schematic::Generator::Restrictions::Enumeration do
       before do
         class CrazyTownValidator < ActiveModel::EachValidator
           def validate_each(record, attribute, value)
-            record.errors.add(attribute, "must be crazy") unless value.match /.*crazy.*/
+            record.errors.add(attribute, "must be crazy") unless value.match /.*crazy.*|\w/
           end
 
-          def xsd_restriction
-            /.*crazy.*/
+          def xsd_pattern_restrictions
+            [/\w/, /.*crazy.*/]
           end
         end
       end
@@ -27,7 +27,12 @@ describe Schematic::Generator::Restrictions::Enumeration do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = CustomModel.new(:title => "happy")
+        invalid_instance = CustomModel.new(:title => "happy today")
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+        invalid_instance = CustomModel.new(:title => "happytoday")
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -46,6 +51,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="String">
+                      <xs:pattern value="\\w"/>
                       <xs:pattern value=".*crazy.*"/>
                     </xs:restriction>
                   </xs:simpleContent>
