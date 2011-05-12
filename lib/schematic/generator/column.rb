@@ -17,6 +17,8 @@ module Schematic
             complex_type.xs :simpleContent do |simple_content|
               simple_content.xs :restriction, "base" => map_type(@column) do |restriction|
                 Restrictions::Length.new(@klass, @column).generate(restriction)
+                Restrictions::Enumeration.new(@klass, @column).generate(restriction)
+                Restrictions::Pattern.new(@klass, @column).generate(restriction)
               end
             end
           end
