@@ -1,0 +1,5 @@
+* Support numericality validation as pattern restriction
+* Support exclusion validation as a pattern restriction
+* Support exact length validation with length? or is min/max okay?
+* Support uniqueness constraint on primary keys and uniqness validations using unique or key tag?
+
