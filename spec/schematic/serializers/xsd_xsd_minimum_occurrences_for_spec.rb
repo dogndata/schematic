@@ -13,7 +13,7 @@ describe Schematic::Serializers::Xsd do
       end
 
       it "should return 0" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
+        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
       end
     end
 
@@ -28,7 +28,7 @@ describe Schematic::Serializers::Xsd do
       end
 
       it "should return 0" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
+        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
       end
     end
 
@@ -43,7 +43,7 @@ describe Schematic::Serializers::Xsd do
       end
 
       it "should return 1" do
-        SomeModel.xsd_minimum_occurrences_for_column(SomeModel.columns.first).should == "1"
+        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "1"
       end
     end
   end

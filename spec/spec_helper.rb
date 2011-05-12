@@ -92,14 +92,14 @@ def generate_xsd_for_model(model)
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
-  <xs:element name="#{model.xsd_element_collection_name}" type="#{model.xsd_type_collection_name}"/>
-  <xs:complexType name="#{model.xsd_type_collection_name}">
+  <xs:element name="#{model.xsd_generator.names.element_collection}" type="#{model.xsd_generator.names.collection_type}"/>
+  <xs:complexType name="#{model.xsd_generator.names.collection_type}">
     <xs:sequence>
-      <xs:element name="#{model.xsd_element_name}" type="#{model.xsd_type_name}" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="#{model.xsd_generator.names.element}" type="#{model.xsd_generator.names.type}" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="type" type="xs:string" fixed="array"/>
   </xs:complexType>
-  <xs:complexType name="#{model.xsd_type_name}">
+  <xs:complexType name="#{model.xsd_generator.names.type}">
     <xs:all>
   #{yield}
     </xs:all>
