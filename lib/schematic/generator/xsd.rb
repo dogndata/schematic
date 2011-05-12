@@ -64,27 +64,7 @@ module Schematic
 
       def generate_column_elements(builder, additional_methods, ignored_methods)
         @klass.columns.each do |column|
-          next if additional_methods.keys.map(&:to_s).include?(column.name) || ignored_methods.map(&:to_s).include?(column.name)
-
-          builder.xs :element, "name" => column.name.dasherize, "minOccurs" => minimum_occurrences_for_column(column), "maxOccurs" => "1" do |field|
-            field.xs :complexType do |complex_type|
-              complex_type.xs :simpleContent do |simple_content|
-                simple_content.xs :restriction, "base" => map_type(column) do |restriction|
-                  generate_length_restriction_for_column(restriction, column)
-                end
-              end
-            end
-          end
-        end
-      end
-
-      def generate_length_restriction_for_column(builder, column)
-        @klass._validators[column.name.to_sym].each do |column_validation|
-          next unless column_validation.is_a?  ActiveModel::Validations::LengthValidator
-          next unless column_validation.options[:if].nil?
-          builder.xs(:maxLength, "value" => column_validation.options[:maximum]) if column_validation.options[:maximum]
-          builder.xs(:minLength, "value" => column_validation.options[:minimum]) if column_validation.options[:minimum]
-          return
+          Column.new(@klass, column, additional_methods, ignored_methods).generate(builder)
         end
       end
 
@@ -116,22 +96,10 @@ module Schematic
         end
       end
 
-      def minimum_occurrences_for_column(column)
-        @klass._validators[column.name.to_sym].each do |column_validation|
-          next unless column_validation.is_a?  ActiveModel::Validations::PresenceValidator
-          return "1" if column_validation.options[:allow_blank] != true && column_validation.options[:if].nil?
-        end
-        "0"
-      end
-
       def nested_attributes
         @klass.reflect_on_all_associations.select do |association|
           @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true
         end
-      end
-
-      def map_type(column)
-        Types::COMPLEX[column.type][:complex_type]
       end
 
       def ns(ns, provider, key)

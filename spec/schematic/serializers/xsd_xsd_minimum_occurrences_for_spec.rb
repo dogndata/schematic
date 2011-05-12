@@ -2,7 +2,9 @@ require "spec_helper"
 
 describe Schematic::Serializers::Xsd do
 
-  describe ".xsd_minimum_occurrences_for" do
+  describe ".minimum_occurrences_for_column" do
+    subject { Schematic::Generator::Column.new(SomeModel, column).minimum_occurrences_for_column }
+    let(:column) { SomeModel.columns.first }
 
     context "given a column with no validations" do
       with_model :some_model do
@@ -12,9 +14,7 @@ describe Schematic::Serializers::Xsd do
         model {}
       end
 
-      it "should return 0" do
-        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
-      end
+      it { should == "0" }
     end
 
     context "given a column with presence of but allow blank" do
@@ -27,9 +27,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      it "should return 0" do
-        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "0"
-      end
+      it { should == "0" }
     end
 
     context "given a column with presence of and no allow blank" do
@@ -42,9 +40,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      it "should return 1" do
-        SomeModel.xsd_generator.minimum_occurrences_for_column(SomeModel.columns.first).should == "1"
-      end
+      it { should == "1" }
     end
   end
 
