@@ -26,7 +26,6 @@ describe Schematic::Serializers::Xsd do
             t.date "some_date"
             t.boolean "some_boolean"
             t.text "method_is_also_columns"
-            t.text "method_is_also_an_empty_column"
           end
 
           model do
@@ -34,11 +33,15 @@ describe Schematic::Serializers::Xsd do
             validates :some_text, :presence => true
             validates :some_date, :presence => true, :allow_blank => true
             validates :some_datetime, :presence => true, :allow_blank => false
-
+            attr_accessor :additional_method_array
             class << self
               def xsd_methods
-                {:foo => { :bar => { :baz => nil }, :quz => [:qaz] }, :method_is_also_columns => [:method_is_also_column], :method_is_also_an_empty_column =>[ ] }
+                {:foo => { :bar => { :baz => nil }, :quz => [:qaz] }, :method_is_also_columns => [:method_is_also_column], :additional_method_array => [] }
               end
+            end
+
+            def to_xml(options)
+              super({:methods => [:additional_method_array]}.merge(options))
             end
           end
 
@@ -56,10 +59,9 @@ describe Schematic::Serializers::Xsd do
                                    :some_boolean => true,
                                    :some_float => 1.5,
                                    :method_is_also_columns => [{:some => "somevalues"}],
-                                   :method_is_also_an_empty_column => [],
+                                   :additional_method_array => {"somevalue" => "somekey"},
                                    :some_integer => 2)
           xml = [instance].to_xml
-
           validate_xml_against_xsd(xml, subject)
         end
       end

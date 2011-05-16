@@ -76,8 +76,12 @@ module Schematic
               element.xs :complexType do |complex_type|
                 if values.is_a?(Array)
                   complex_type.xs :sequence do |nested_sequence|
-                    values.each do |value|
-                      nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded"
+                    if values.present?
+                      values.each do |value|
+                        nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded"
+                      end
+                    else
+                      nested_sequence.xs :any, "processContents" => "skip", "minOccurs" => "0", "maxOccurs" => "unbounded"
                     end
                   end
                 elsif values.is_a?(Hash)
