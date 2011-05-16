@@ -1,3 +1,4 @@
+.pairs
 *.gem
 *~
 .DS_Store
