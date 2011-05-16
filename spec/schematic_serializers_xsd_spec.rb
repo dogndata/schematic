@@ -266,7 +266,14 @@ describe Schematic::Serializers::Xsd do
                   </xs:simpleContent>
                 </xs:complexType>
               </xs:element>
-              <xs:element name="foo-bar" minOccurs="0" maxOccurs="1"/>
+              <xs:element name="foo-bar" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="String">
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
             XML
           end
 

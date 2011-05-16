@@ -91,7 +91,9 @@ module Schematic
               end
             end
           else
-            builder.xs :element, "name" => method_xsd_name, "minOccurs" => "0", "maxOccurs" => "1"
+            column_klass = Struct.new(:name, :type)
+            column = column_klass.new(method_name.to_s, :string)
+            Column.new(@klass, column, {}, @klass.xsd_ignore_methods).generate(builder)
           end
         end
       end
