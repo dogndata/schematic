@@ -19,21 +19,25 @@ describe Schematic::Serializers::Xsd do
         with_model :some_model do
           table do |t|
             t.string "some_string"
+            t.text "some_text"
             t.float "some_float"
             t.integer "some_integer"
             t.datetime "some_datetime"
             t.date "some_date"
             t.boolean "some_boolean"
+            t.text "method_is_also_columns"
+            t.text "method_is_also_an_empty_column"
           end
 
           model do
             validates :some_string, :presence => true, :length => { :maximum => 100 }
+            validates :some_text, :presence => true
             validates :some_date, :presence => true, :allow_blank => true
             validates :some_datetime, :presence => true, :allow_blank => false
 
             class << self
               def xsd_methods
-                {:foo => { :bar => { :baz => nil }, :quz => [:qaz] } }
+                {:foo => { :bar => { :baz => nil }, :quz => [:qaz] }, :method_is_also_columns => [:method_is_also_column], :method_is_also_an_empty_column =>[ ] }
               end
             end
           end
@@ -47,11 +51,15 @@ describe Schematic::Serializers::Xsd do
         it "should validate against it's own XSD" do
           instance = SomeModel.new(:some_string => "ExampleString",
                                    :some_date => Date.today,
+                                   :some_text => "here is some text",
                                    :some_datetime => DateTime.new,
                                    :some_boolean => true,
                                    :some_float => 1.5,
+                                   :method_is_also_columns => [{:some => "somevalues"}],
+                                   :method_is_also_an_empty_column => [],
                                    :some_integer => 2)
           xml = [instance].to_xml
+
           validate_xml_against_xsd(xml, subject)
         end
       end

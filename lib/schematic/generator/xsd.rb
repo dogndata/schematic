@@ -71,7 +71,7 @@ module Schematic
       def generate_additional_methods(builder, additional_methods)
         additional_methods.each do |method_name, values|
           method_xsd_name = method_name.to_s.dasherize
-          if values.present?
+          if values.is_a?(Array) || values.is_a?(Hash)
             builder.xs :element, "name" => method_xsd_name, "minOccurs" => "0", "maxOccurs" => "1" do |element|
               element.xs :complexType do |complex_type|
                 if values.is_a?(Array)
