@@ -212,7 +212,8 @@ describe Schematic::Serializers::Xsd do
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
-            <xs:element name="empty-models" type="EmptyModels"/>
+            <xs:element name="empty-models" type="EmptyModels">
+            </xs:element>
             <xs:complexType name="EmptyModels">
               <xs:sequence>
                 <xs:element name="empty-model" type="EmptyModel" minOccurs="0" maxOccurs="unbounded"/>

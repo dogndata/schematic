@@ -23,7 +23,9 @@ module Schematic
       end
 
       def element_for_klass(builder)
-        builder.xs :element, "name" => @names.element_collection, "type" => @names.collection_type
+        builder.xs :element, "name" => @names.element_collection, "type" => @names.collection_type do |element|
+          generate_uniqueness_constraints(element)
+        end
       end
 
       def generate(builder, klass)
@@ -65,6 +67,12 @@ module Schematic
       def generate_column_elements(builder, additional_methods, ignored_methods)
         @klass.columns.each do |column|
           Column.new(@klass, column, additional_methods, ignored_methods).generate(builder)
+        end
+      end
+
+      def generate_uniqueness_constraints(builder)
+        @klass.columns.each do |column|
+           Restrictions::Uniqueness.new(@klass, column).generate(builder)
         end
       end
 

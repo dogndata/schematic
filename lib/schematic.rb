@@ -18,6 +18,7 @@ module Schematic
       autoload :Length, 'schematic/generator/restrictions/length'
       autoload :Pattern, 'schematic/generator/restrictions/pattern'
       autoload :Numericality, 'schematic/generator/restrictions/numericality'
+      autoload :Uniqueness, 'schematic/generator/restrictions/uniqueness'
     end
   end
   module Serializers
