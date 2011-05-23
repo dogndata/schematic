@@ -15,6 +15,7 @@ module Schematic
       autoload :Base, 'schematic/generator/restrictions/base'
       autoload :Custom, 'schematic/generator/restrictions/custom'
       autoload :Enumeration, 'schematic/generator/restrictions/enumeration'
+      autoload :Exclusion, 'schematic/generator/restrictions/exclusion'
       autoload :Length, 'schematic/generator/restrictions/length'
       autoload :Pattern, 'schematic/generator/restrictions/pattern'
       autoload :Numericality, 'schematic/generator/restrictions/numericality'
