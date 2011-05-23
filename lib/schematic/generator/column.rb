@@ -19,6 +19,7 @@ module Schematic
                 Restrictions::Length.new(@klass, @column).generate(restriction)
                 Restrictions::Enumeration.new(@klass, @column).generate(restriction)
                 Restrictions::Pattern.new(@klass, @column).generate(restriction)
+                Restrictions::Numericality.new(@klass, @column).generate(restriction)
                 Restrictions::Custom.new(@klass, @column).generate(restriction)
               end
             end

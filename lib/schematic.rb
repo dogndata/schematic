@@ -17,6 +17,7 @@ module Schematic
       autoload :Enumeration, 'schematic/generator/restrictions/enumeration'
       autoload :Length, 'schematic/generator/restrictions/length'
       autoload :Pattern, 'schematic/generator/restrictions/pattern'
+      autoload :Numericality, 'schematic/generator/restrictions/numericality'
     end
   end
   module Serializers

@@ -165,6 +165,7 @@ describe Schematic::Generator::Restrictions::Length do
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="String">
+                      <xs:maxLength value="100"/>
                     </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
