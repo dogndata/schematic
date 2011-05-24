@@ -39,7 +39,7 @@ def sanitize_xml(xml)
   xml.split("\n").reject(&:blank?).map(&:strip).join("\n")
 end
 
-def generate_xsd_for_model(model)
+def generate_xsd_for_model(model, header_element = nil)
   output = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -92,7 +92,9 @@ def generate_xsd_for_model(model)
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
-  <xs:element name="#{model.xsd_generator.names.element_collection}" type="#{model.xsd_generator.names.collection_type}"/>
+  <xs:element name="#{model.xsd_generator.names.element_collection}" type="#{model.xsd_generator.names.collection_type}">
+  #{header_element}
+  </xs:element>
   <xs:complexType name="#{model.xsd_generator.names.collection_type}">
     <xs:sequence>
       <xs:element name="#{model.xsd_generator.names.element}" type="#{model.xsd_generator.names.type}" minOccurs="0" maxOccurs="unbounded"/>
