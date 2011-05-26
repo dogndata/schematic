@@ -7,7 +7,13 @@ module Schematic
       def initialize(klass, options = {})
         @klass = klass
         @names = Names.new(klass)
-        @options = options
+        self.options = options
+      end
+
+      def options=(hash = {})
+        @options = {:generated_types => []}.merge(hash)
+        @options[:generated_types] << @klass unless @options[:generated_types].include?(@klass)
+        @options
       end
 
       def header(builder)
@@ -30,9 +36,11 @@ module Schematic
 
       def generate(builder, klass)
         nested_attributes.each do |nested_attribute|
-          next if nested_attribute.klass == klass || nested_attribute.klass == klass.superclass
-
+          next if nested_attribute.klass == klass
+          next if nested_attribute.klass == klass.superclass
+          next if @options && @options[:generated_types] && @options[:generated_types].include?(klass)
           nested_attribute.klass.generate_xsd(builder, klass, @options)
+          @options[:generated_types] << klass
         end
 
         generate_complex_type_for_collection(builder)

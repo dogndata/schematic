@@ -154,6 +154,45 @@ describe Schematic::Serializers::Xsd do
         end
 
       end
+
+      context "when the model has a nested reference that references another nested reference" do
+        with_model :blog do
+          table {}
+          model do
+            has_many :posts
+            has_many :readers
+            accepts_nested_attributes_for :posts
+            accepts_nested_attributes_for :readers
+          end
+        end
+
+        with_model :post do
+          table do |t|
+            t.integer :blog_id
+          end
+
+          model do
+            belongs_to :blog
+            has_many :readers
+            accepts_nested_attributes_for :blog
+            accepts_nested_attributes_for :readers
+          end
+        end
+
+        with_model :reader do
+          table do |t|
+            t.integer :blog_id
+            t.integer :post_id
+          end
+        end
+
+        subject { Post.to_xsd }
+
+        it "should generate a valid XSD" do
+          validate_xsd(subject)
+        end
+
+      end
     end
 
     context "for an empty model with no attributes or validations" do
