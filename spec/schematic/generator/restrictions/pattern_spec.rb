@@ -51,10 +51,12 @@ describe Schematic::Generator::Restrictions::Pattern do
       with_model :pattern_model do
         table :id => false do |t|
           t.string "email"
+          t.string "money"
         end
 
         model do
           validates :email, :format => { :with => /\A([\w\.%\+\-`']+)@([\w\-]+\.)+([\w]{2,})\Z/ }
+          validates :money, :format => { :with =>  /\$?[,0-9]+(?:\.\d+)?/ }
         end
       end
 
@@ -64,7 +66,12 @@ describe Schematic::Generator::Restrictions::Pattern do
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = PatternModel.new(:email => "foo@bar.com")
+        invalid_instance = PatternModel.new(:money => "whatever")
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, subject)
+        }.should raise_error
+        valid_instance = PatternModel.new(:email => "foo@bar.com", :money => "$99.95")
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)

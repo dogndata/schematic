@@ -8,6 +8,8 @@ module Schematic
               value = pattern.source
               value.gsub!(/^(?:\^|\\A|\\a)?/, '')
               value.gsub!(/(?:\$|\\Z|\\z)?$/, '')
+              value.gsub!(/\\\$/, '$')
+              value.gsub!(/\(\?:/, '(')
               builder.xs(:pattern, "value" => value)
             end
           end
