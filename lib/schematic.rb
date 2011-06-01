@@ -9,7 +9,9 @@ module Schematic
     autoload :Names, 'schematic/generator/names'
     autoload :Namespaces, 'schematic/generator/namespaces'
     autoload :Column, 'schematic/generator/column'
+    autoload :ColumnValidator, 'schematic/generator/column_validator'
     autoload :Types, 'schematic/generator/types'
+    autoload :Uniqueness, 'schematic/generator/uniqueness'
 
     module Restrictions
       autoload :Base, 'schematic/generator/restrictions/base'
@@ -18,7 +20,6 @@ module Schematic
       autoload :Length, 'schematic/generator/restrictions/length'
       autoload :Pattern, 'schematic/generator/restrictions/pattern'
       autoload :Numericality, 'schematic/generator/restrictions/numericality'
-      autoload :Uniqueness, 'schematic/generator/restrictions/uniqueness'
     end
   end
   module Serializers
