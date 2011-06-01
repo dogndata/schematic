@@ -12,7 +12,7 @@ module Schematic
 
       def options=(hash = {})
         @options = {:generated_types => []}.merge(hash)
-        @options[:generated_types] << @klass unless @options[:generated_types].include?(@klass)
+        @options[:generated_types] << @klass
         @options
       end
 
@@ -38,9 +38,9 @@ module Schematic
         nested_attributes.each do |nested_attribute|
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
-          next if @options && @options[:generated_types] && @options[:generated_types].include?(klass)
+          next if @options && @options[:generated_types] && @options[:generated_types].include?(nested_attribute.klass)
           nested_attribute.klass.generate_xsd(builder, klass, @options)
-          @options[:generated_types] << klass
+          @options[:generated_types] << nested_attribute.klass
         end
 
         generate_complex_type_for_collection(builder)
@@ -64,7 +64,7 @@ module Schematic
             generate_column_elements(all, additional_methods, ignored_methods)
 
             nested_attributes.each do |nested_attribute|
-              all.xs :element, "name" => "#{nested_attribute.name.to_s.dasherize}-attributes", "type" => nested_attribute.klass.xsd_generator.names.collection_type, "minOccurs" => "0", "maxOccurs" => "1"
+              all.xs :element, "name" => nested_attribute.klass.xsd_generator.names.nested_attribute_name, "type" => nested_attribute.klass.xsd_generator.names.collection_type, "minOccurs" => "0", "maxOccurs" => "1"
             end
 
             generate_additional_methods(all, additional_methods)

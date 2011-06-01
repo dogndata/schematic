@@ -7,7 +7,7 @@ module Schematic
       end
 
       def type
-        @klass.name.demodulize
+        @klass.name.gsub(/::/,'')
       end
 
       def element
@@ -20,6 +20,10 @@ module Schematic
 
       def collection_type
         type.pluralize
+      end
+
+      def nested_attribute_name
+        "#{element_collection}-attributes"
       end
 
     end

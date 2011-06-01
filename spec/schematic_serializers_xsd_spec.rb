@@ -98,7 +98,7 @@ describe Schematic::Serializers::Xsd do
         with_model :parent do
           table {}
           model do
-            has_many :children
+            has_many :children, :class_name => "Namespace::Child"
             accepts_nested_attributes_for :children
           end
         end
@@ -125,29 +125,37 @@ describe Schematic::Serializers::Xsd do
         it "should generate a valid XSD" do
           validate_xsd(subject)
         end
+
+        it "should validate against its own XSD" do
+          child_instance = Namespace::Child.new(:parent_id => 123)
+          xml = [child_instance].to_xml
+          lambda {
+            validate_xml_against_xsd(xml, subject)
+          }.should_not raise_error
+        end
       end
 
       context "when the model has a circular nested attribute reference" do
-        with_model :blog do
+        with_model :plate do
           table {}
           model do
-            has_many :posts
-            accepts_nested_attributes_for :posts
+            has_many :cheeses
+            accepts_nested_attributes_for :cheeses
           end
         end
 
-        with_model :post do
+        with_model :cheese do
           table do |t|
-            t.integer :blog_id
+            t.integer :plate_id
           end
 
           model do
-            belongs_to :blog
-            accepts_nested_attributes_for :blog
+            belongs_to :plate
+            accepts_nested_attributes_for :plate
           end
         end
 
-        subject { Post.to_xsd }
+        subject { Cheese.to_xsd }
 
         it "should generate a valid XSD" do
           validate_xsd(subject)
