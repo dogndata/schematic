@@ -1,7 +1,12 @@
 module Schematic
   module Generator
     class Column
-
+      attr_accessor :restriction_classes
+      class << self
+        def restriction_classes
+          @restriction_classes ||= Restrictions.constants
+        end
+      end
       def initialize(klass, column, additional_methods = {}, ignored_methods = {})
         @klass = klass
         @column = column
@@ -16,11 +21,9 @@ module Schematic
           field.xs :complexType do |complex_type|
             complex_type.xs :simpleContent do |simple_content|
               simple_content.xs :restriction, "base" => map_type(@column) do |restriction|
-                Restrictions::Length.new(@klass, @column).generate(restriction)
-                Restrictions::Enumeration.new(@klass, @column).generate(restriction)
-                Restrictions::Pattern.new(@klass, @column).generate(restriction)
-                Restrictions::Numericality.new(@klass, @column).generate(restriction)
-                Restrictions::Custom.new(@klass, @column).generate(restriction)
+                self.class.restriction_classes.each do |restriction_class|
+                  restriction_class.new(@klass, @column).generate(restriction)
+                end
               end
             end
           end

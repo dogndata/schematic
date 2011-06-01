@@ -80,7 +80,7 @@ module Schematic
 
       def generate_uniqueness_constraints(builder)
         @klass.columns.each do |column|
-           Restrictions::Uniqueness.new(@klass, column).generate(builder)
+           Uniqueness.new(@klass, column).generate(builder)
         end
       end
 
