@@ -380,5 +380,13 @@ describe Schematic::Serializers::Xsd do
     it "turns 'children' into 'children-attributes'" do
       xsd.nested_attribute_name('children').should == "children-attributes"
     end
+
+    it "turns 'special-children' into 'special-children-attributes'" do
+      xsd.nested_attribute_name("special_children").should == "special-children-attributes"
+    end
+
+    it "properly converts symbols" do
+      xsd.nested_attribute_name(:very_special_children).should == "very-special-children-attributes"
+    end
   end
 end

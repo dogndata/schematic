@@ -133,7 +133,7 @@ module Schematic
       end
 
       def nested_attribute_name(name)
-        "#{name.to_s.pluralize}-attributes"
+        "#{name.to_s.gsub("_", "-").pluralize}-attributes"
       end
 
     end
