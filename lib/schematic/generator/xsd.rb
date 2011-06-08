@@ -64,7 +64,11 @@ module Schematic
             generate_column_elements(all, additional_methods, ignored_methods)
 
             nested_attributes.each do |nested_attribute|
-              all.xs :element, "name" => nested_attribute.klass.xsd_generator.names.nested_attribute_name, "type" => nested_attribute.klass.xsd_generator.names.collection_type, "minOccurs" => "0", "maxOccurs" => "1"
+              all.xs :element,
+                "name" => nested_attribute_name(nested_attribute.name),
+                "type" => nested_attribute.klass.xsd_generator.names.collection_type,
+                "minOccurs" => "0",
+                "maxOccurs" => "1"
             end
 
             generate_additional_methods(all, additional_methods)
@@ -126,6 +130,10 @@ module Schematic
 
       def ns(ns, provider, key)
         { "xmlns:#{ns}" => Namespaces::PROVIDERS[provider][key] }
+      end
+
+      def nested_attribute_name(name)
+        "#{name.to_s.pluralize}-attributes"
       end
 
     end

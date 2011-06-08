@@ -135,6 +135,34 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
+      context "when the model has a nested attribute on a subclass with a different class name than the association" do
+        with_model :parent do
+          table {}
+          model do
+            has_many :children, :class_name => "SpecialChild"
+            accepts_nested_attributes_for :children
+          end
+        end
+
+        with_model :special_child do
+          table do |t|
+            t.integer :parent_id
+          end
+
+          model do
+            belongs_to :parent
+          end
+        end
+
+        subject { Parent.to_xsd }
+
+        it "should generate a valid XSD" do
+          subject.should include "children-attributes"
+          subject.should_not include "special-children-attributes"
+          validate_xsd(subject)
+        end
+      end
+
       context "when the model has a circular nested attribute reference" do
         with_model :plate do
           table {}
@@ -343,4 +371,14 @@ describe Schematic::Serializers::Xsd do
 
   end
 
+  describe "#nested_attribute_name" do
+    let(:xsd) {Schematic::Generator::Xsd.new(Object)}
+    it "turns 'child' into 'children-attributes'" do
+      xsd.nested_attribute_name('child').should == "children-attributes"
+    end
+
+    it "turns 'children' into 'children-attributes'" do
+      xsd.nested_attribute_name('children').should == "children-attributes"
+    end
+  end
 end
