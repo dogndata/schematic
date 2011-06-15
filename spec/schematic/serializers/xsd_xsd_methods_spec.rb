@@ -114,8 +114,24 @@ describe Schematic::Serializers::Xsd do
         table {}
 
         model do
+          def foo=(value)
+            @foo = value
+          end
+
+          def foo
+            @foo
+          end
+
+          def self.xsd_foo_enumeration_restrictions
+            ["1", "2", "3"]
+          end
+
           def self.xsd_methods
-            {:foo => [:bar]}
+            {:foo => [:foo]}
+          end
+
+          def to_xml(options = {})
+            super({:methods => [:foo]}.merge(options))
           end
         end
       end
@@ -134,7 +150,17 @@ describe Schematic::Serializers::Xsd do
             <xs:element name="foo" minOccurs="0" maxOccurs="1">
               <xs:complexType>
                 <xs:sequence>
-                  <xs:element name="bar" minOccurs="0" maxOccurs="unbounded"/>
+                  <xs:element name="foo" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:restriction base="String">
+                          <xs:enumeration value="1"/>
+                          <xs:enumeration value="2"/>
+                          <xs:enumeration value="3"/>
+                        </xs:restriction>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
                 </xs:sequence>
                 <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
               </xs:complexType>
@@ -142,6 +168,20 @@ describe Schematic::Serializers::Xsd do
           XML
         end
         sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+      end
+
+      it "should validate against its own XSD" do
+        invalid_instance = SomeModel.new(:foo => ["a", "b"])
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, SomeModel.to_xsd)
+        }.should raise_error
+
+        instance = SomeModel.new(:foo => ["1", "2"])
+        xml = [instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, SomeModel.to_xsd)
+        }.should_not raise_error
       end
     end
 

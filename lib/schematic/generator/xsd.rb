@@ -88,6 +88,21 @@ module Schematic
         end
       end
 
+      def generate_sequence_value_restrictions(builder, value)
+        enumeration_method = "xsd_#{value}_enumeration_restrictions".to_sym
+        builder.xs :complexType do |complex_type|
+          complex_type.xs :simpleContent do |simple_content|
+            simple_content.xs :restriction, "base" => "String" do |restriction|
+              if @klass.respond_to? enumeration_method
+                @klass.send(enumeration_method).each do |enumeration|
+                  restriction.xs :enumeration, "value" => enumeration
+                end
+              end
+            end
+          end
+        end
+      end
+
       def generate_additional_methods(builder, additional_methods)
         additional_methods.each do |method_name, values|
           method_xsd_name = method_name.to_s.dasherize
@@ -98,7 +113,9 @@ module Schematic
                   complex_type.xs :sequence do |nested_sequence|
                     if values.present?
                       values.each do |value|
-                        nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded"
+                        nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded" do |sequence_element|
+                          generate_sequence_value_restrictions(sequence_element, value)
+                        end
                       end
                     else
                       nested_sequence.xs :any, "processContents" => "skip", "minOccurs" => "0", "maxOccurs" => "unbounded"

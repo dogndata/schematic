@@ -58,7 +58,7 @@ describe Schematic::Serializers::Xsd do
                                    :some_datetime => DateTime.new,
                                    :some_boolean => true,
                                    :some_float => 1.5,
-                                   :method_is_also_columns => [{:some => "somevalues"}],
+                                   :method_is_also_columns => ["somevalues"],
                                    :additional_method_array => {"somevalue" => "somekey"},
                                    :some_integer => 2)
           xml = [instance].to_xml
