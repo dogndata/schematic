@@ -88,7 +88,7 @@ module Schematic
         end
       end
 
-      def generate_sequence_value_restrictions(builder, value)
+      def generate_inclusion_value_restrictions(builder, value)
         enumeration_method = "xsd_#{value}_enumeration_restrictions".to_sym
         builder.xs :complexType do |complex_type|
           complex_type.xs :simpleContent do |simple_content|
@@ -114,7 +114,7 @@ module Schematic
                     if values.present?
                       values.each do |value|
                         nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded" do |sequence_element|
-                          generate_sequence_value_restrictions(sequence_element, value)
+                          generate_inclusion_value_restrictions(sequence_element, value)
                         end
                       end
                     else
