@@ -109,6 +109,71 @@ describe Schematic::Serializers::Xsd do
       end
     end
 
+    context "given a singular enumeration restriction" do
+      with_model :some_model do
+        table {}
+
+        model do
+
+          attr_accessor :bar
+
+          def self.xsd_bar_enumeration_restrictions
+            ["a", "b", "c"]
+          end
+
+          def self.xsd_methods
+            {:bar => nil}
+          end
+
+          def to_xml(options = {})
+            super({:methods => [:bar]}.merge(options))
+          end
+        end
+      end
+
+      it "should include the additional methods" do
+        xsd = generate_xsd_for_model(SomeModel) do
+          <<-XML
+            <xs:element name="id" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:restriction base="Integer">
+                  </xs:restriction>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="bar" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:restriction base="String">
+                    <xs:enumeration value="a"/>
+                    <xs:enumeration value="b"/>
+                    <xs:enumeration value="c"/>
+                  </xs:restriction>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          XML
+        end
+        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+      end
+
+      it "should validate against the xsd" do
+        xsd = SomeModel.to_xsd
+
+        invalid_instance = SomeModel.new(:bar => "invalid option")
+        xml = [invalid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, xsd)
+        }.should raise_error
+        valid_instance = SomeModel.new(:bar => "b")
+        xml = [valid_instance].to_xml
+        lambda {
+          validate_xml_against_xsd(xml, xsd)
+        }.should_not raise_error
+      end
+    end
+
     context "given a an array of methods" do
       with_model :some_model do
         table {}
