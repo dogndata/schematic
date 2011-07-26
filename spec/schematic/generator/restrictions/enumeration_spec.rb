@@ -1,4 +1,5 @@
 require "spec_helper"
+require "support/extensions/active_model/validations/inclusion"
 
 describe Schematic::Generator::Restrictions::Enumeration do
   describe ".to_xsd" do
@@ -8,11 +9,13 @@ describe Schematic::Generator::Restrictions::Enumeration do
         table :id => false do |t|
           t.string "title"
           t.boolean "active"
+          t.string "options"
         end
 
         model do
           validates :title, :inclusion => { :in => ["a", "b", "c"] }
           validates :active, :inclusion => { :in => [true, false] }
+          validates :options, :inclusion => { :in => lambda { |f| ["some valid attribute"] } }
         end
       end
 
@@ -22,7 +25,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = EnumerationModel.new(:title => "a", :active => true)
+        valid_instance = EnumerationModel.new(:title => "a", :active => true, :options => "some valid attribute")
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -47,6 +50,14 @@ describe Schematic::Generator::Restrictions::Enumeration do
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="Boolean">
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="String">
                     </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
