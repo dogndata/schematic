@@ -4,7 +4,7 @@
 
 == DESCRIPTION
 
-Automatic XSD generation for your ActiveRecord models 
+Automatic XSD generation for your ActiveRecord models
 
 == INSTALL
 
@@ -38,6 +38,30 @@ You can exclude elements by defining a ".xsd_ignore_methods" on your class:
       [:created_at, :updated_at]
     end
   end
+
+You can define your own custom restrictions by inheriting from the Restrictions Base class:
+
+  class MyCustomRestriction < Schematic::Generator::Restrictions::Base
+    def generate(builder)
+      for_validator ActiveModel::BlockValidator do |validator|
+        builder.xs(:enumeration, "value" => "foo")
+        builder.xs(:enumeration, "value" => "bar")
+      end
+    end
+  end
+
+You can have a custom pattern restriction from a custom validater:
+
+  class MyValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      ...
+    end
+
+    def xsd_pattern_restrictions
+      [/foo/, /bar/]
+    end
+  end
+
 
 == REQUIREMENTS
 
