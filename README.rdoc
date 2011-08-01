@@ -62,6 +62,18 @@ You can have a custom pattern restriction from a custom validater:
     end
   end
 
+You can have a custom enumeration restriction from a custom validater:
+
+  class MyValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      ...
+    end
+
+    def xsd_field_enumeration_restrictions
+      ["foo", "bar"]
+    end
+  end
+
 
 == REQUIREMENTS
 
