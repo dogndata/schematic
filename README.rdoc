@@ -23,6 +23,14 @@ Then run:
 
   Post.to_xsd => (a bunch of xml)
 
+Validations will automatically add restrictions to the XSD for fields. If a validation has a conditional 
+if or unless option it will be skipped. However if you wish to force the inclusion of the validation in 
+the XSD you can set: { :xsd => { :include => true } } in the options e.g.
+
+  class Post < ActiveRecord::Base
+    validates :category, :inclusion => { :in => ["foo", "bar"], :xsd => { :include => true } }, :if => lambda { ... }
+  end
+
 You can include additional elements by defining a ".xsd_methods" on your class:
 
   class Post < ActiveRecord::Base
