@@ -11,7 +11,9 @@ module Schematic
       def for_validator(validator_klass)
         validators_for_column.each do |column_validation|
           next unless column_validation.is_a? validator_klass
-          next unless column_validation.options[:if].nil? || column_validation.options[:unless].nil?
+          has_conditional_proc = !column_validation.options[:if].nil? || !column_validation.options[:unless].nil?
+          force_inclusion = column_validation.options[:xsd] && column_validation.options[:xsd][:include]
+          next if has_conditional_proc && !force_inclusion
           yield(column_validation)
           return
         end
