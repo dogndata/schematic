@@ -15,6 +15,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
           t.string "options"
           t.integer "force_enumeration"
           t.integer "skip_enumeration"
+          t.integer "skip_inclusion_set_lambda"
         end
 
         model do
@@ -26,6 +27,11 @@ describe Schematic::Generator::Restrictions::Enumeration do
           validates :options, :inclusion => { :in => lambda { |f| ["some valid attribute"] } }
           validates :force_enumeration, :inclusion => { :in => [1, 2], :xsd => { :include => true} }, :if => lambda { false }
           validates :skip_enumeration, :inclusion => { :in => [1, 2], :xsd => { :include => false} }, :if => lambda { true }
+          validates :skip_inclusion_set_lambda, :inclusion => { :in => lambda { |x| [1, 2] } }, :if => :some_method
+
+          def some_method
+            true
+          end
         end
       end
 
@@ -42,7 +48,8 @@ describe Schematic::Generator::Restrictions::Enumeration do
                                               :active => true,
                                               :options => "some valid attribute",
                                               :force_enumeration => 2,
-                                              :skip_enumeration => 2)
+                                              :skip_enumeration => 2,
+                                              :skip_inclusion_set_lambda => 2)
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -114,6 +121,14 @@ describe Schematic::Generator::Restrictions::Enumeration do
                 </xs:complexType>
               </xs:element>
               <xs:element name="skip-enumeration" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="Integer">
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="skip-inclusion-set-lambda" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="Integer">
