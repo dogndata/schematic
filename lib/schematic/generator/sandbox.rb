@@ -43,6 +43,10 @@ module Schematic
           added_elements[name] = nil
         end
       end
+
+      def method_missing(method, *args, &block)
+        @klass.send method, *args, &block
+      end
     end
   end
 end
