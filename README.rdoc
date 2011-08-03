@@ -31,21 +31,22 @@ the XSD you can set: { :xsd => { :include => true } } in the options e.g.
     validates :category, :inclusion => { :in => ["foo", "bar"], :xsd => { :include => true } }, :if => lambda { ... }
   end
 
-You can include additional elements by defining a ".xsd_methods" on your class:
+You can include or exclude additional elements:
 
   class Post < ActiveRecord::Base
-    def self.xsd_methods
-      {:title => nil, :author => [:name, :email, :url]}
+    schematic do
+      element :title
+      element :author => [:name, :email, :url]
+      element :blog => { :post => { :category => nil } }
+      ignore :comments
     end
   end
 
-You can exclude elements by defining a ".xsd_ignore_methods" on your class:
+If you want to programatically include or exclude elements use:
 
-  class Post < ActiveRecord::Base
-    def self.xsd_ignore_methods
-      [:created_at, :updated_at]
-    end
-  end
+  Post#schematic_sandbox.added_elements and Post#schematic_sandbox.ignored_elements
+
+The former is a Hash and the latter is an Array.
 
 You can define your own custom restrictions by inheriting from the Restrictions Base class:
 

@@ -5,6 +5,7 @@ module Schematic
     end
   end
   module Generator
+    autoload :Sandbox, 'schematic/generator/sandbox'
     autoload :Xsd, 'schematic/generator/xsd'
     autoload :Names, 'schematic/generator/names'
     autoload :Namespaces, 'schematic/generator/namespaces'

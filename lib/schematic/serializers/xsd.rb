@@ -7,30 +7,16 @@ module Schematic
         end
       end
 
-      def xsd_generator
-        @xsd_generator ||= Schematic::Generator::Xsd.new(self)
+      def schematic(&block)
+        schematic_sandbox.run(&block)
+      end
+
+      def schematic_sandbox
+        @schematic_sandbox ||= Schematic::Generator::Sandbox.new(self)
       end
 
       def to_xsd(options = {})
-        output = ""
-        builder = Builder::XmlMarkup.new(:target => output, :indent => 2)
-        xsd_generator.options = options
-        xsd_generator.header(builder)
-        xsd_generator.schema(builder)
-        output
-      end
-
-      def generate_xsd(builder, klass, options)
-        xsd_generator.options = options
-        xsd_generator.generate(builder, klass)
-      end
-
-      def xsd_methods
-        {}
-      end
-
-      def xsd_ignore_methods
-        []
+        schematic_sandbox.to_xsd(options)
       end
 
     end

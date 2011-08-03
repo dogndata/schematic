@@ -1,15 +1,15 @@
 require "spec_helper"
 
 describe Schematic::Serializers::Xsd do
-  describe ".xsd_ignore_methods" do
+  describe "schematic#ignore keyword" do
     with_model :some_model do
       table :id => false do |t|
         t.string :title
       end
 
       model do
-        def self.xsd_ignore_methods
-          [:title]
+        schematic do
+          ignore :title
         end
       end
     end

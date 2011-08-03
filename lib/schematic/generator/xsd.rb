@@ -39,7 +39,7 @@ module Schematic
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
           next if @options && @options[:generated_types] && @options[:generated_types].include?(nested_attribute.klass)
-          nested_attribute.klass.generate_xsd(builder, klass, @options)
+          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, @options)
           @options[:generated_types] << nested_attribute.klass
         end
 
@@ -58,15 +58,15 @@ module Schematic
 
       def generate_complex_type_for_model(builder)
         builder.xs :complexType, "name" => @names.type do |complex_type|
-          additional_methods = @klass.xsd_methods.merge(@options[:methods] || {})
-          ignored_methods = @klass.xsd_ignore_methods | (@options[:exclude] || [])
+          additional_methods = @klass.schematic_sandbox.added_elements.merge(@options[:methods] || {})
+          ignored_methods = @klass.schematic_sandbox.ignored_elements | (@options[:exclude] || [])
           complex_type.xs :all do |all|
             generate_column_elements(all, additional_methods, ignored_methods)
 
             nested_attributes.each do |nested_attribute|
               all.xs :element,
                 "name" => nested_attribute_name(nested_attribute.name),
-                "type" => nested_attribute.klass.xsd_generator.names.collection_type,
+                "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.collection_type,
                 "minOccurs" => "0",
                 "maxOccurs" => "1"
             end
@@ -134,7 +134,7 @@ module Schematic
           else
             column_klass = Struct.new(:name, :type)
             column = column_klass.new(method_name.to_s, :string)
-            Column.new(@klass, column, {}, @klass.xsd_ignore_methods).generate(builder)
+            Column.new(@klass, column, {}, @klass.schematic_sandbox.ignored_elements).generate(builder)
           end
         end
       end

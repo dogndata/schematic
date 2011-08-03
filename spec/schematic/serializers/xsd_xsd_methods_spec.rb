@@ -1,14 +1,14 @@
 require "spec_helper"
 
 describe Schematic::Serializers::Xsd do
-  describe ".xsd_methods" do
+  describe "Adding additional methods" do
     context "given a method" do
       with_model :some_model do
         table {}
 
         model do
-          def self.xsd_methods
-            {:foo_bar => nil}
+          schematic do
+            element :foo_bar
           end
         end
       end
@@ -58,8 +58,8 @@ describe Schematic::Serializers::Xsd do
             super({:methods => [:foo_bar]}.merge(options))
           end
 
-          def self.xsd_methods
-            {:foo_bar => nil}
+          schematic do
+            element :foo_bar
           end
         end
       end
@@ -121,8 +121,8 @@ describe Schematic::Serializers::Xsd do
             ["a", "b", "c"]
           end
 
-          def self.xsd_methods
-            {:bar => nil}
+          schematic do
+            element :bar
           end
 
           def to_xml(options = {})
@@ -191,8 +191,8 @@ describe Schematic::Serializers::Xsd do
             ["1", "2", "3"]
           end
 
-          def self.xsd_methods
-            {:foo => [:foo]}
+          schematic do
+            element :foo => [:foo]
           end
 
           def to_xml(options = {})
@@ -255,8 +255,9 @@ describe Schematic::Serializers::Xsd do
         table {}
 
         model do
-          def self.xsd_methods
-            { :foo => { :bar => {:baz => nil } } }
+          schematic do
+            element :foo => { :bar => { :baz => nil } }
+            element :quz
           end
         end
       end
@@ -292,6 +293,14 @@ describe Schematic::Serializers::Xsd do
               </xs:element>
             </xs:all>
             <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="quz" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:restriction base="String">
+              </xs:restriction>
+            </xs:simpleContent>
           </xs:complexType>
         </xs:element>
           XML
