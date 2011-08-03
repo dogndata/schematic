@@ -8,7 +8,7 @@ describe Schematic::Serializers::Xsd do
 
         model do
           schematic do
-            element :foo_bar
+            add :foo_bar
           end
         end
       end
@@ -59,7 +59,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           schematic do
-            element :foo_bar
+            add :foo_bar
           end
         end
       end
@@ -122,7 +122,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           schematic do
-            element :bar
+            add :bar
           end
 
           def to_xml(options = {})
@@ -192,7 +192,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           schematic do
-            element :foo => [:foo]
+            add :foo => [:foo]
           end
 
           def to_xml(options = {})
@@ -256,8 +256,8 @@ describe Schematic::Serializers::Xsd do
 
         model do
           schematic do
-            element :foo => { :bar => { :baz => nil } }
-            element :quz
+            add :foo => { :bar => { :baz => nil } }
+            add :quz
           end
         end
       end

@@ -25,7 +25,7 @@ describe Schematic::Generator::Sandbox do
     context "given a single element" do
       it "should add the method to the element list" do
         subject.run do
-          element :foo
+          add :foo
         end
         subject.added_elements.keys.should include(:foo)
       end
@@ -34,7 +34,7 @@ describe Schematic::Generator::Sandbox do
     context "nesting elements" do
       it "should add the method to the element list" do
         subject.run do
-          element :foo => { :bar => nil }
+          add :foo => { :bar => nil }
         end
         subject.added_elements[:foo].should == { :bar => nil }
       end
@@ -43,7 +43,7 @@ describe Schematic::Generator::Sandbox do
     context "sequence of subelements" do
       it "should add the method to the element list" do
         subject.run do
-          element :foo => [:bar]
+          add :foo => [:bar]
         end
         subject.added_elements[:foo].should == [:bar]
       end

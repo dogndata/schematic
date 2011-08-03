@@ -35,9 +35,9 @@ describe Schematic::Serializers::Xsd do
             validates :some_datetime, :presence => true, :allow_blank => false
             attr_accessor :additional_method_array
             schematic do
-              element :foo => { :bar => { :baz => nil }, :quz => [:qaz] }
-              element :method_is_also_columns => [:method_is_also_column]
-              element :additional_method_array => []
+              add :foo => { :bar => { :baz => nil }, :quz => [:qaz] }
+              add :method_is_also_columns => [:method_is_also_column]
+              add :additional_method_array => []
             end
 
             def to_xml(options)

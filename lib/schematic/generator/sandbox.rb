@@ -35,7 +35,7 @@ module Schematic
         fields.each { |field| ignored_elements << field }
       end
 
-      def element(*args)
+      def add(*args)
         name = args.shift
         if name.is_a? Hash
           added_elements[name.keys.first] = name.values.first
