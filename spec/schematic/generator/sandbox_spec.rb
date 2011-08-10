@@ -50,6 +50,23 @@ describe Schematic::Generator::Sandbox do
     end
   end
 
+  describe "requiring elements" do
+    it "should add the method to the required list" do
+      subject.run do
+        required :foo
+      end
+      subject.required_elements.should include(:foo)
+    end
+
+    it "accepts multiple fields" do
+      subject.run do
+        required :foo, :bar
+      end
+      subject.required_elements.should include(:foo)
+      subject.required_elements.should include(:bar)
+    end
+  end
+
   describe "methods on original object get called when not difined in sandbox module" do
     before do
       klass.stub(:foo)

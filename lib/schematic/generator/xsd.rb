@@ -60,8 +60,9 @@ module Schematic
         builder.xs :complexType, "name" => @names.type do |complex_type|
           additional_methods = @klass.schematic_sandbox.added_elements.merge(@options[:methods] || {})
           ignored_methods = @klass.schematic_sandbox.ignored_elements | (@options[:exclude] || [])
+          required_methods = @klass.schematic_sandbox.required_elements
           complex_type.xs :all do |all|
-            generate_column_elements(all, additional_methods, ignored_methods)
+            generate_column_elements(all, additional_methods, ignored_methods, required_methods)
 
             nested_attributes.each do |nested_attribute|
               all.xs :element,
@@ -76,9 +77,9 @@ module Schematic
         end
       end
 
-      def generate_column_elements(builder, additional_methods, ignored_methods)
+      def generate_column_elements(builder, additional_methods, ignored_methods, required_methods)
         @klass.columns.each do |column|
-          Column.new(@klass, column, additional_methods, ignored_methods).generate(builder)
+          Column.new(@klass, column, additional_methods, ignored_methods, required_methods).generate(builder)
         end
       end
 

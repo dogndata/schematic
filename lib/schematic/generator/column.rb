@@ -8,11 +8,12 @@ module Schematic
         end
       end
 
-      def initialize(klass, column, additional_methods = {}, ignored_methods = {})
+      def initialize(klass, column, additional_methods = {}, ignored_methods = [], required_methods = [])
         @klass = klass
         @column = column
         @additional_methods = additional_methods
         @ignored_methods = ignored_methods
+        @required_methods = required_methods
       end
 
       def generate(builder)
@@ -32,6 +33,7 @@ module Schematic
       end
 
       def minimum_occurrences_for_column
+        return "1" if @required_methods.include?(@column.name.to_sym)
         @klass._validators[@column.name.to_sym].each do |column_validation|
           next unless column_validation.is_a?  ActiveModel::Validations::PresenceValidator
           return "1" if column_validation.options[:allow_blank] != true && column_validation.options[:if].nil?

@@ -91,5 +91,39 @@ describe Schematic::Serializers::Xsd do
         end
       end
     end
+
+    context "with a model with field explicitly required" do
+      subject { sanitize_xml(SomeModel.to_xsd) }
+      context "when allow blank is true" do
+        with_model :some_model do
+          table :id => false do |t|
+            t.boolean "current"
+          end
+
+          model do
+            schematic do
+              required :current
+            end
+          end
+        end
+
+        it "should mark that the field minimum occurrences is 1" do
+          xsd = generate_xsd_for_model(SomeModel) do
+            <<-XML
+              <xs:element name="current" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="Boolean">
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            XML
+          end
+
+          subject.should == xsd
+        end
+      end
+    end
   end
 end

@@ -1,12 +1,13 @@
 module Schematic
   module Generator
     class Sandbox
-      attr_accessor :ignored_elements, :added_elements
+      attr_accessor :ignored_elements, :added_elements, :required_elements
 
       def initialize(klass)
         @klass = klass
         @ignored_elements ||= []
         @added_elements ||= {}
+        @required_elements ||= []
       end
 
       def run(&block)
@@ -42,6 +43,10 @@ module Schematic
         else
           added_elements[name] = nil
         end
+      end
+
+      def required(*fields)
+        fields.each { |field| required_elements << field }
       end
 
       def method_missing(method, *args, &block)
