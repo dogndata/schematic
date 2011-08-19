@@ -66,10 +66,12 @@ describe Schematic::Serializers::Xsd do
         with_model :some_model do
           table :id => false do |t|
             t.string "title"
+            t.string "description"
           end
 
           model do
             validates :title, :presence => true, :if => lambda { |model| false }
+            validates :description, :presence => true, :unless => lambda { |model| true }
           end
         end
 
@@ -77,6 +79,14 @@ describe Schematic::Serializers::Xsd do
           xsd = generate_xsd_for_model(SomeModel) do
             <<-XML
               <xs:element name="title" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="String">
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="description" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="String">
