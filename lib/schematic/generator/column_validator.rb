@@ -20,6 +20,7 @@ module Schematic
       end
 
       def validators_for_column
+        return [] unless klass.respond_to?(:_validators)
         klass._validators[column.name.to_sym]
       end
     end

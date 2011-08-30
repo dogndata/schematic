@@ -13,6 +13,45 @@ describe Schematic::Serializers::Xsd do
   describe ".to_xsd" do
 
     context "XSD validation" do
+      context "for a normal class that has XML serialization" do
+        subject { SomeClass.to_xsd }
+
+        before do
+          class SomeClass
+            include ActiveModel::Serializers::Xml
+            def attributes=(hash)
+              @hash = hash
+            end
+
+            def attributes
+              @hash
+            end
+            extend Schematic::Serializers::Xsd
+            schematic do
+              add :foo
+            end
+
+          end
+        end
+
+        it "should generate a valid XSD" do
+          validate_xsd(subject)
+        end
+
+        it "should validate against it's own XSD" do
+          invalid_instance = SomeClass.new
+          invalid_instance.attributes = { "bar" => "foo" }
+          xml = [invalid_instance].to_xml
+          lambda {
+            validate_xml_against_xsd(xml, subject)
+          }.should raise_error
+
+          instance = SomeClass.new
+          instance.attributes = { "foo" => "bar" }
+          xml = [instance].to_xml
+          validate_xml_against_xsd(xml, subject)
+        end
+      end
       context "when the model is not namespaced" do
         subject { SomeModel.to_xsd }
 

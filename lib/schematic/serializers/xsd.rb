@@ -3,7 +3,8 @@ module Schematic
     module Xsd
       class << self
         def extended(klass)
-          raise InvalidClass unless klass.ancestors.include?(ActiveRecord::Base)
+          raise ClassMissingXmlSerializer unless klass.ancestors.include?(ActiveModel::Serializers::Xml)
+          raise ClassMissingAttributes unless klass.instance_methods.include?(:attributes)
         end
       end
 

@@ -78,12 +78,14 @@ module Schematic
       end
 
       def generate_column_elements(builder, additional_methods, ignored_methods, required_methods)
+        return unless @klass.respond_to?(:columns)
         @klass.columns.each do |column|
           Column.new(@klass, column, additional_methods, ignored_methods, required_methods).generate(builder)
         end
       end
 
       def generate_uniqueness_constraints(builder)
+        return unless @klass.respond_to?(:columns)
         @klass.columns.each do |column|
            Uniqueness.new(@klass, column).generate(builder)
         end
@@ -141,6 +143,7 @@ module Schematic
       end
 
       def nested_attributes
+        return [] unless @klass.respond_to?(:reflect_on_all_associations)
         @klass.reflect_on_all_associations.select do |association|
           @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true
         end
