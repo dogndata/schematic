@@ -38,7 +38,9 @@ module Schematic
         nested_attributes.each do |nested_attribute|
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
-          next if @options && @options[:generated_types] && @options[:generated_types].include?(nested_attribute.klass)
+          @options ||= {}
+          @options[:generated_types] ||= []
+          next if @options[:generated_types].include?(nested_attribute.klass)
           nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, @options)
           @options[:generated_types] << nested_attribute.klass
         end

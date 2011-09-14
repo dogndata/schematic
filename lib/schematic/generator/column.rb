@@ -19,7 +19,10 @@ module Schematic
       def generate(builder)
         return if skip_generation?
 
-        builder.xs :element, "name" => @column.name.dasherize, "minOccurs" => minimum_occurrences_for_column, "maxOccurs" => "1" do |field|
+        builder.xs :element,
+          "name" => @column.name.dasherize,
+          "minOccurs" => minimum_occurrences_for_column,
+          "maxOccurs" => "1" do |field|
           field.xs :complexType do |complex_type|
             complex_type.xs :simpleContent do |simple_content|
               simple_content.xs :restriction, "base" => map_type(@column) do |restriction|
