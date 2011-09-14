@@ -56,7 +56,7 @@ describe Schematic::Serializers::Xsd do
         subject { SomeModel.to_xsd }
 
         with_model :some_model do
-          table do |t|
+          table :id => false do |t|
             t.string "some_string"
             t.text "some_text"
             t.float "some_float"
@@ -134,39 +134,42 @@ describe Schematic::Serializers::Xsd do
       end
 
       context "when the model has a nested attribute on a subclass with a reference to the superclass" do
-        with_model :parent do
-          table {}
-          model do
-            has_many :children, :class_name => "Namespace::Child"
-            accepts_nested_attributes_for :children
-          end
-        end
-
         with_model :child do
           table do |t|
             t.integer :parent_id
           end
-
-          model do
-            belongs_to :parent
-          end
+          model {}
         end
+        with_model :parent do
+          table {}
+          model {}
+        end
+
 
         before do
-          module Namespace; end
-          class Namespace::Child < Child
+          ::Child.class_eval do
+            belongs_to :parent
+          end
+          module Namespace
+            if defined?(SubChild)
+             remove_const(:SubChild)
+            end
+          end
+          class Namespace::SubChild < ::Child
             accepts_nested_attributes_for :parent
+          end
+          ::Parent.class_eval do
+            has_many :children, :class_name => "Namespace::SubChild"
+            accepts_nested_attributes_for :children
           end
         end
 
-        subject { Namespace::Child.to_xsd }
+        subject { Namespace::SubChild.to_xsd }
 
-        it "should generate a valid XSD" do
+        it "should generate a valid xsd and validate against its own XSD" do
           validate_xsd(subject)
-        end
-
-        it "should validate against its own XSD" do
-          child_instance = Namespace::Child.new(:parent_id => 123)
+          child_instance = Namespace::SubChild.new(:parent_id => 123)
+          child_instance.save!
           xml = [child_instance].to_xml
           lambda {
             validate_xml_against_xsd(xml, subject)
@@ -175,7 +178,7 @@ describe Schematic::Serializers::Xsd do
       end
 
       context "when the model has a nested attribute on a subclass with a different class name than the association" do
-        with_model :parent do
+        with_model :parent2 do
           table {}
           model do
             has_many :children, :class_name => "SpecialChild"
@@ -189,11 +192,11 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
-            belongs_to :parent
+            belongs_to :parent2
           end
         end
 
-        subject { Parent.to_xsd }
+        subject { Parent2.to_xsd }
 
         it "should generate a valid XSD" do
           subject.should include "children-attributes"
@@ -281,6 +284,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:integer">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -288,6 +292,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:float">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -295,6 +300,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:string">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -302,6 +308,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:string">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -309,6 +316,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:dateTime">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -316,6 +324,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:date">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>
@@ -323,6 +332,7 @@ describe Schematic::Serializers::Xsd do
             <xs:simpleContent>
             <xs:extension base="xs:boolean">
             <xs:attribute name="type" type="xs:string" use="optional"/>
+            <xs:attribute name="nil" type="xs:boolean" use="optional"/>
             </xs:extension>
             </xs:simpleContent>
             </xs:complexType>

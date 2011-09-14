@@ -48,6 +48,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:integer">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -55,6 +56,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:float">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -62,6 +64,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:string">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -69,6 +72,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:string">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -76,6 +80,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:dateTime">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -83,6 +88,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:date">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
@@ -90,6 +96,7 @@ def generate_xsd_for_model(model, header_element = nil)
   <xs:simpleContent>
   <xs:extension base="xs:boolean">
   <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>

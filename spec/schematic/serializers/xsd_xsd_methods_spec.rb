@@ -41,7 +41,9 @@ describe Schematic::Serializers::Xsd do
 
     context "given a method with validations" do
       with_model :some_model do
-        table {}
+        table :id => false do |t|
+          t.string :foo
+        end
 
         model do
           validates :foo_bar, :inclusion => { :in => [1,2,3] }
@@ -68,10 +70,10 @@ describe Schematic::Serializers::Xsd do
       it "should generate validation restrictions for the method if there are any" do
         xsd = generate_xsd_for_model(SomeModel) do
           <<-XML
-        <xs:element name="id" minOccurs="0" maxOccurs="1">
+        <xs:element name="foo" minOccurs="0" maxOccurs="1">
           <xs:complexType>
             <xs:simpleContent>
-              <xs:restriction base="Integer">
+              <xs:restriction base="String">
               </xs:restriction>
             </xs:simpleContent>
           </xs:complexType>
@@ -111,7 +113,9 @@ describe Schematic::Serializers::Xsd do
 
     context "given a singular enumeration restriction" do
       with_model :some_model do
-        table {}
+        table :id => false do |t|
+          t.string :foo
+        end
 
         model do
 
@@ -134,10 +138,10 @@ describe Schematic::Serializers::Xsd do
       it "should include the additional methods" do
         xsd = generate_xsd_for_model(SomeModel) do
           <<-XML
-            <xs:element name="id" minOccurs="0" maxOccurs="1">
+            <xs:element name="foo" minOccurs="0" maxOccurs="1">
               <xs:complexType>
                 <xs:simpleContent>
-                  <xs:restriction base="Integer">
+                  <xs:restriction base="String">
                   </xs:restriction>
                 </xs:simpleContent>
               </xs:complexType>
@@ -176,7 +180,9 @@ describe Schematic::Serializers::Xsd do
 
     context "given a an array of methods" do
       with_model :some_model do
-        table {}
+        table :id => false do |t|
+          t.string :bar
+        end
 
         model do
           def foo=(value)
@@ -204,10 +210,10 @@ describe Schematic::Serializers::Xsd do
       it "should include the additional methods" do
         xsd = generate_xsd_for_model(SomeModel) do
           <<-XML
-            <xs:element name="id" minOccurs="0" maxOccurs="1">
+            <xs:element name="bar" minOccurs="0" maxOccurs="1">
               <xs:complexType>
                 <xs:simpleContent>
-                  <xs:restriction base="Integer">
+                  <xs:restriction base="String">
                   </xs:restriction>
                 </xs:simpleContent>
               </xs:complexType>

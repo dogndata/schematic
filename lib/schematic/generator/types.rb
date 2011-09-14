@@ -19,6 +19,7 @@ module Schematic
             complex_type.xs :simpleContent do |simple_content|
               simple_content.xs :extension, "base" => xsd_type do |extension|
                 extension.xs :attribute, "name" => "type", "type" => "xs:string", "use" => "optional"
+                extension.xs :attribute, "name" => "nil", "type" => "xs:boolean", "use" => "optional"
               end
             end
           end
