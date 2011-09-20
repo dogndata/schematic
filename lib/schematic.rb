@@ -12,6 +12,7 @@ module Schematic
   end
 
   module Generator
+    autoload :XmlHelper, 'schematic/generator/xml_helper'
     autoload :Sandbox, 'schematic/generator/sandbox'
     autoload :Xsd, 'schematic/generator/xsd'
     autoload :Names, 'schematic/generator/names'
@@ -20,6 +21,7 @@ module Schematic
     autoload :ColumnValidator, 'schematic/generator/column_validator'
     autoload :Types, 'schematic/generator/types'
     autoload :Uniqueness, 'schematic/generator/uniqueness'
+    autoload :Wsdl, 'schematic/generator/wsdl'
 
     module Restrictions
       autoload :Base, 'schematic/generator/restrictions/base'

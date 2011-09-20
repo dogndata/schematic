@@ -1,6 +1,7 @@
 module Schematic
   module Generator
     class Xsd
+      include XmlHelper
       attr_reader :output, :names
       attr_accessor :options
 
@@ -14,10 +15,6 @@ module Schematic
         @options = {:generated_types => []}.merge(hash)
         @options[:generated_types] << @klass
         @options
-      end
-
-      def header(builder)
-        builder.instruct!
       end
 
       def schema(builder)
@@ -149,10 +146,6 @@ module Schematic
         @klass.reflect_on_all_associations.select do |association|
           @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true
         end
-      end
-
-      def ns(ns, provider, key)
-        { "xmlns:#{ns}" => Namespaces::PROVIDERS[provider][key] }
       end
 
       def nested_attribute_name(name)

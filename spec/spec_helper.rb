@@ -35,6 +35,16 @@ def validate_xsd(xml)
   end
 end
 
+def validate_wsdl(xml)
+  wsdl_schema_file = File.join(File.dirname(__FILE__), "xsd", "wsdl20.xsd")
+  wsdl_xsd = Nokogiri::XML::Schema(File.open(wsdl_schema_file))
+  puts xml
+  doc = Nokogiri::XML.parse(xml)
+  wsdl_xsd.validate(doc).each do |error|
+    error.message.should be_nil
+  end
+end
+
 def sanitize_xml(xml)
   xml.split("\n").reject(&:blank?).map(&:strip).join("\n")
 end
