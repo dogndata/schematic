@@ -67,11 +67,20 @@ module Schematic
             generate_column_elements(all, additional_methods, ignored_methods, required_methods)
 
             nested_attributes.each do |nested_attribute|
-              all.xs :element,
-                "name" => nested_attribute_name(nested_attribute.name),
-                "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.collection_type,
-                "minOccurs" => "0",
-                "maxOccurs" => "1"
+              case nested_attribute.macro
+              when :has_many
+                all.xs :element,
+                  "name" => nested_attribute_name(nested_attribute.name),
+                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.collection_type,
+                  "minOccurs" => "0",
+                  "maxOccurs" => "1"
+              when :has_one
+                all.xs :element,
+                  "name" => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
+                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
+                  "minOccurs" => "0",
+                  "maxOccurs" => "1"
+              end
             end
 
             generate_additional_methods(all, additional_methods)
@@ -155,8 +164,12 @@ module Schematic
         { "xmlns:#{ns}" => Namespaces::PROVIDERS[provider][key] }
       end
 
-      def nested_attribute_name(name)
-        "#{name.to_s.gsub("_", "-").pluralize}-attributes"
+      def nested_attribute_name(name, options={})
+        pluralized = options.delete(:pluralized)
+        pluralized = true if pluralized.nil?
+        name = name.to_s.gsub("_", "-")
+        name = name.pluralize if pluralized
+        "#{name}-attributes"
       end
 
     end

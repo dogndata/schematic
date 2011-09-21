@@ -177,7 +177,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      context "when the model has a nested attribute on a subclass with a different class name than the association" do
+      context "when the model has a nested attribute on a subclass with a different class name than the has_many association" do
         with_model :parent2 do
           table {}
           model do
@@ -201,6 +201,34 @@ describe Schematic::Serializers::Xsd do
         it "should generate a valid XSD" do
           subject.should include "children-attributes"
           subject.should_not include "special-children-attributes"
+          validate_xsd(subject)
+        end
+      end
+
+      context "when the model has a nested attribute for a has_one association" do
+        with_model :car do
+          table {}
+          model do
+            has_one :engine
+            accepts_nested_attributes_for :engine
+          end
+        end
+
+        with_model :engine do
+          table do |t|
+            t.integer :car_id
+          end
+
+          model do
+            belongs_to :car
+          end
+        end
+
+        subject { Car.to_xsd }
+
+        it "should generate a valid XSD" do
+          subject.should include "engine-attributes"
+          subject.should_not include "engines-attributes"
           validate_xsd(subject)
         end
       end
