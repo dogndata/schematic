@@ -229,6 +229,7 @@ describe Schematic::Serializers::Xsd do
         it "should generate a valid XSD" do
           subject.should include "engine-attributes"
           subject.should_not include "engines-attributes"
+          subject.should_not include "Engines"
           validate_xsd(subject)
         end
       end

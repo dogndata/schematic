@@ -27,9 +27,9 @@ module Schematic
         output
       end
 
-      def generate_xsd(builder, klass, options)
+      def generate_xsd(builder, klass, include_collection, options)
         xsd_generator.options = options
-        xsd_generator.generate(builder, klass)
+        xsd_generator.generate(builder, klass, include_collection)
       end
 
       def ignore(*fields)

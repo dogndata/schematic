@@ -34,18 +34,18 @@ module Schematic
         end
       end
 
-      def generate(builder, klass)
+      def generate(builder, klass, include_collection=true)
         nested_attributes.each do |nested_attribute|
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
           @options ||= {}
           @options[:generated_types] ||= []
           next if @options[:generated_types].include?(nested_attribute.klass)
-          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, @options)
+          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, nested_attribute.macro == :has_many, @options)
           @options[:generated_types] << nested_attribute.klass
         end
 
-        generate_complex_type_for_collection(builder)
+        generate_complex_type_for_collection(builder) if include_collection
         generate_complex_type_for_model(builder)
       end
 
