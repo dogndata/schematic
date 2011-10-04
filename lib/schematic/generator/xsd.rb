@@ -156,7 +156,7 @@ module Schematic
       def nested_attributes
         return [] unless @klass.respond_to?(:reflect_on_all_associations)
         @klass.reflect_on_all_associations.select do |association|
-          @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true
+          @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true && !@klass.schematic_sandbox.ignored_elements.include?(association.name.to_sym)
         end
       end
 

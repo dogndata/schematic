@@ -234,6 +234,36 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
+      context "when the model has a nested attribute which is ignored" do
+        with_model :car do
+          table {}
+          model do
+            has_one :engine
+            accepts_nested_attributes_for :engine
+            schematic do
+              ignore :engine
+            end
+          end
+        end
+
+        with_model :engine do
+          table do |t|
+            t.integer :car_id
+          end
+
+          model do
+            belongs_to :car
+          end
+        end
+
+        subject { Car.to_xsd }
+
+        it "should generate a valid XSD" do
+          subject.should_not include "engine-attributes"
+          validate_xsd(subject)
+        end
+      end
+
       context "when the model has a circular nested attribute reference" do
         with_model :plate do
           table {}
