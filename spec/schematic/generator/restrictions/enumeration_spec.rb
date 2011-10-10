@@ -13,6 +13,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
           t.string "and_also_be_skipped"
           t.boolean "active"
           t.string "options"
+          t.string "more_options"
           t.integer "force_enumeration"
           t.integer "skip_enumeration"
           t.integer "skip_inclusion_set_lambda"
@@ -25,6 +26,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
           validates :and_also_be_skipped, :inclusion => ["a", "b", "c"], :if => lambda { true}, :unless => lambda { false }
           validates :active, :inclusion => { :in => [true, false] }
           validates :options, :inclusion => { :in => lambda { |f| ["some valid attribute"] } }
+          validates :more_options, :inclusion => { :in => lambda { |f| f.title == "something" ? ["test"] : ["something else"] } }
           validates :force_enumeration, :inclusion => { :in => [1, 2], :xsd => { :include => true} }, :if => lambda { false }
           validates :skip_enumeration, :inclusion => { :in => [1, 2], :xsd => { :include => false} }, :if => lambda { true }
           validates :skip_inclusion_set_lambda, :inclusion => { :in => lambda { |x| [1, 2] } }, :if => :some_method
@@ -47,6 +49,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
                                               :and_also_be_skipped => "a",
                                               :active => true,
                                               :options => "some valid attribute",
+                                              :more_options => "something else",
                                               :force_enumeration => 2,
                                               :skip_enumeration => 2,
                                               :skip_inclusion_set_lambda => 2)
@@ -106,6 +109,15 @@ describe Schematic::Generator::Restrictions::Enumeration do
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="String">
+                      <xs:enumeration value="some valid attribute"/>
+                    </xs:restriction>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="more-options" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:restriction base="String">
                     </xs:restriction>
                   </xs:simpleContent>
                 </xs:complexType>
@@ -144,5 +156,3 @@ describe Schematic::Generator::Restrictions::Enumeration do
     end
   end
 end
-
-

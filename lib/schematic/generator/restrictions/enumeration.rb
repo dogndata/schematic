@@ -5,8 +5,12 @@ module Schematic
         def generate(builder)
           for_validator ActiveModel::Validations::InclusionValidator do |validator|
             next if column.type == :boolean
-            next if validator.options[:in].respond_to?(:call)
-            validator.options[:in].each do |value|
+            if validator.options[:in].respond_to?(:call)
+              valid_values = validator.options[:in].call(nil) rescue []
+            else
+              valid_values = validator.options[:in]
+            end
+            valid_values.each do |value|
               builder.xs(:enumeration, "value" => value)
             end
           end
@@ -21,4 +25,3 @@ module Schematic
     end
   end
 end
-
