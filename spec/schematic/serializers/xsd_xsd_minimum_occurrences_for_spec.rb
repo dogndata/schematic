@@ -11,7 +11,6 @@ describe Schematic::Serializers::Xsd do
         table :id => false do |t|
           t.string "title"
         end
-        model {}
       end
 
       it { should == "0" }

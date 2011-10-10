@@ -4,8 +4,6 @@ describe Schematic::Serializers::Xsd do
   describe "Adding additional methods" do
     context "given a method" do
       with_model :some_model do
-        table {}
-
         model do
           schematic do
             add :foo_bar
@@ -258,8 +256,6 @@ describe Schematic::Serializers::Xsd do
 
     context "given nested methods" do
       with_model :some_model do
-        table {}
-
         model do
           schematic do
             add :foo => { :bar => { :baz => nil } }

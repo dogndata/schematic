@@ -139,11 +139,8 @@ describe Schematic::Serializers::Xsd do
           table do |t|
             t.integer :parent_id
           end
-          model {}
         end
         with_model :parent do
-          table {}
-          model {}
         end
 
 
@@ -180,7 +177,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a nested attribute on a subclass with a different class name than the has_many association" do
         with_model :parent2 do
-          table {}
           model do
             has_many :children, :class_name => "SpecialChild"
             accepts_nested_attributes_for :children
@@ -208,7 +204,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a nested attribute for a has_one association" do
         with_model :car do
-          table {}
           model do
             has_one :engine
             accepts_nested_attributes_for :engine
@@ -237,7 +232,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a nested attribute which is ignored" do
         with_model :car do
-          table {}
           model do
             has_one :engine
             accepts_nested_attributes_for :engine
@@ -267,7 +261,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a nested attribute and ignores one of the methods of the nested attribute" do
         with_model :parent do
-          table {}
           model do
             has_one :child
             accepts_nested_attributes_for :child
@@ -313,7 +306,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a circular nested attribute reference" do
         with_model :plate do
-          table {}
           model do
             has_many :cheeses
             accepts_nested_attributes_for :cheeses
@@ -341,7 +333,6 @@ describe Schematic::Serializers::Xsd do
 
       context "when the model has a nested reference that references another nested reference" do
         with_model :blog do
-          table {}
           model do
             has_many :posts
             has_many :readers
@@ -493,7 +484,6 @@ describe Schematic::Serializers::Xsd do
 
       describe "additional methods" do
         with_model :some_model do
-          table {}
         end
 
         it "should include the additional method" do
