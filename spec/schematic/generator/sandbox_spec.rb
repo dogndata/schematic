@@ -77,19 +77,4 @@ describe Schematic::Generator::Sandbox do
       subject.required_elements.should include(:bar)
     end
   end
-
-  describe "methods on original object get called when not difined in sandbox module" do
-    before do
-      klass.stub(:foo)
-    end
-
-    it "should delegate missing methods to klass" do
-      klass.should_receive(:foo)
-
-      subject.run do
-        self.foo
-      end
-    end
-  end
 end
-

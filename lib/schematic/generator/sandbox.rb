@@ -54,10 +54,6 @@ module Schematic
       def required(*fields)
         fields.each { |field| required_elements << field }
       end
-
-      def method_missing(method, *args, &block)
-        @klass.send method, *args, &block
-      end
     end
   end
 end
