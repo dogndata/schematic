@@ -40,6 +40,7 @@ module Schematic
           next if nested_attribute.klass == klass.superclass
           @options ||= {}
           @options[:generated_types] ||= []
+          @options[:exclude] = klass.schematic_sandbox.ignored_elements[nested_attribute.name]
           next if @options[:generated_types].include?(nested_attribute.klass)
           nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, nested_attribute.macro == :has_many, @options)
           @options[:generated_types] << nested_attribute.klass
@@ -61,8 +62,20 @@ module Schematic
       def generate_complex_type_for_model(builder)
         builder.xs :complexType, "name" => @names.type do |complex_type|
           additional_methods = @klass.schematic_sandbox.added_elements.merge(@options[:methods] || {})
-          ignored_methods = @klass.schematic_sandbox.ignored_elements | (@options[:exclude] || [])
+          ignored_methods = @klass.schematic_sandbox.ignored_elements.dup
+          exclude = @options[:exclude]
+
+          case exclude
+          when Hash
+            ignored_methods.merge!(exclude)
+          when Array
+            exclude.each do |key|
+              ignored_methods[key] = nil
+            end
+          end
+
           required_methods = @klass.schematic_sandbox.required_elements
+
           complex_type.xs :all do |all|
             generate_column_elements(all, additional_methods, ignored_methods, required_methods)
 
@@ -156,7 +169,9 @@ module Schematic
       def nested_attributes
         return [] unless @klass.respond_to?(:reflect_on_all_associations)
         @klass.reflect_on_all_associations.select do |association|
-          @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) && association.options[:polymorphic] != true && !@klass.schematic_sandbox.ignored_elements.include?(association.name.to_sym)
+          @klass.instance_methods.include?("#{association.name}_attributes=".to_sym) &&
+            association.options[:polymorphic] != true &&
+            !@klass.schematic_sandbox.ignored_elements[association.name.to_sym].nil?
         end
       end
 

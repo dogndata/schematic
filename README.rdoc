@@ -39,6 +39,7 @@ You can include or exclude additional elements:
       element :author => [:name, :email, :url]
       element :blog => { :post => { :category => nil } }
       ignore :comments
+      ignore :attachments => [:filetype]
     end
   end
 

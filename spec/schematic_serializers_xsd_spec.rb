@@ -52,6 +52,7 @@ describe Schematic::Serializers::Xsd do
           validate_xml_against_xsd(xml, subject)
         end
       end
+
       context "when the model is not namespaced" do
         subject { SomeModel.to_xsd }
 
@@ -260,6 +261,40 @@ describe Schematic::Serializers::Xsd do
 
         it "should generate a valid XSD" do
           subject.should_not include "engine-attributes"
+          validate_xsd(subject)
+        end
+      end
+
+      context "when the model has a nested attribute and ignores one of the methods of the nested attribute" do
+        with_model :parent do
+          table {}
+          model do
+            has_one :child
+            accepts_nested_attributes_for :child
+            schematic do
+              ignore :child => [:last_name]
+            end
+          end
+        end
+
+        with_model :child do
+          table do |t|
+            t.integer :parent_id
+            t.string :first_name
+            t.string :last_name
+          end
+
+          model do
+            belongs_to :parent
+          end
+        end
+
+        subject { Parent.to_xsd }
+
+        it "should generate a valid XSD" do
+          subject.should include "child-attributes"
+          subject.should include "first-name"
+          subject.should_not include "last-name"
           validate_xsd(subject)
         end
       end

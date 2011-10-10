@@ -5,19 +5,30 @@ describe Schematic::Generator::Sandbox do
   let(:klass) { Object }
 
   describe "ignoring elements" do
-    it "should add the method to the ignored list" do
-      subject.run do
-        ignore :foo
+    context "on the base element" do
+      it "should add the method to the ignored list" do
+        subject.run do
+          ignore :foo
+        end
+        subject.ignored_elements.should include(:foo)
       end
-      subject.ignored_elements.should include(:foo)
+
+      it "accepts multiple fields" do
+        subject.run do
+          ignore :foo, :bar
+        end
+        subject.ignored_elements.should include(:foo)
+        subject.ignored_elements.should include(:bar)
+      end
     end
 
-    it "accepts multiple fields" do
-      subject.run do
-        ignore :foo, :bar
+    context "on nested elements" do
+      it "should remove the method to the element list" do
+        subject.run do
+          ignore :foo => [:bar]
+        end
+        subject.ignored_elements[:foo].should == [:bar]
       end
-      subject.ignored_elements.should include(:foo)
-      subject.ignored_elements.should include(:bar)
     end
   end
 

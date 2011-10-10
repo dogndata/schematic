@@ -8,7 +8,7 @@ module Schematic
         end
       end
 
-      def initialize(klass, column, additional_methods = {}, ignored_methods = [], required_methods = [])
+      def initialize(klass, column, additional_methods = {}, ignored_methods = {}, required_methods = [])
         @klass = klass
         @column = column
         @additional_methods = additional_methods
@@ -55,8 +55,7 @@ module Schematic
       end
 
       def skip_generation?
-        @additional_methods.keys.map(&:to_s).include?(@column.name) ||
-          @ignored_methods.map(&:to_s).include?(@column.name)
+        (@additional_methods.keys + @ignored_methods.keys).map(&:to_s).include?(@column.name)
       end
     end
   end

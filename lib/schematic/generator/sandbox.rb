@@ -5,7 +5,7 @@ module Schematic
 
       def initialize(klass)
         @klass = klass
-        @ignored_elements ||= []
+        @ignored_elements ||= Hash.new([])
         @added_elements ||= {}
         @required_elements ||= []
       end
@@ -33,7 +33,13 @@ module Schematic
       end
 
       def ignore(*fields)
-        fields.each { |field| ignored_elements << field }
+        if fields[0].is_a?(Hash)
+          fields[0].each do |key, value|
+            ignored_elements[key.to_sym] = value
+          end
+        else
+          fields.each { |field| ignored_elements[field] = nil }
+        end
       end
 
       def add(*args)
