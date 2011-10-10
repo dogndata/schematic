@@ -4,10 +4,9 @@ module Schematic
       attr_reader :output, :names
       attr_accessor :options
 
-      def initialize(klass, options = {})
+      def initialize(klass)
         @klass = klass
         @names = Names.new(klass)
-        self.options = options
       end
 
       def options=(hash = {})
