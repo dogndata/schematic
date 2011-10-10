@@ -10,7 +10,8 @@ module Schematic
       end
 
       def options=(hash = {})
-        @options = {:generated_types => []}.merge(hash)
+        @options = hash
+        @options[:generated_types] ||= []
         @options[:generated_types] << @klass
         @options
       end
