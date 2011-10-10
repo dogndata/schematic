@@ -289,13 +289,25 @@ describe Schematic::Serializers::Xsd do
           end
         end
 
-        subject { Parent.to_xsd }
+        describe "the parent XSD" do
+          subject { Parent.to_xsd }
 
-        it "should generate a valid XSD" do
-          subject.should include "child-attributes"
-          subject.should include "first-name"
-          subject.should_not include "last-name"
-          validate_xsd(subject)
+          it "should be valid" do
+            subject.should include "child-attributes"
+            subject.should include "first-name"
+            subject.should_not include "last-name"
+            validate_xsd(subject)
+          end
+        end
+
+        describe "the child XSD" do
+          subject { Child.to_xsd }
+
+          it "should be valid" do
+            subject.should include "first-name"
+            subject.should include "last-name"
+            validate_xsd(subject)
+          end
         end
       end
 
