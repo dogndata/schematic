@@ -304,6 +304,56 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
+      context "when the model has a nested attribute and ignores one of the methods of the nested attribute" do
+        with_model :parent do
+          table do |t|
+            t.string :first_name
+            t.string :last_name
+          end
+
+          model do
+            has_one :child
+            accepts_nested_attributes_for :child
+            schematic do
+              ignore :child => [:last_name]
+            end
+          end
+        end
+
+        with_model :child do
+          table do |t|
+            t.integer :parent_id
+            t.string :first_name
+            t.string :last_name
+          end
+
+          model do
+            belongs_to :parent
+          end
+        end
+
+        describe "the parent XSD" do
+          subject { Parent.to_xsd }
+
+          it "should be valid" do
+            subject.should include "child-attributes"
+            subject.should include "first-name"
+            subject.should include "last-name"
+            validate_xsd(subject)
+          end
+        end
+
+        describe "the child XSD" do
+          subject { Child.to_xsd }
+
+          it "should be valid" do
+            subject.should include "first-name"
+            subject.should include "last-name"
+            validate_xsd(subject)
+          end
+        end
+      end
+
       context "when the model has a nested attribute and ignores a required method of the nested attribute" do
         with_model :person do
           model do

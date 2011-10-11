@@ -34,15 +34,18 @@ module Schematic
         end
       end
 
-      def generate(builder, klass, include_collection=true)
+      def generate(builder, klass, include_collection=true, exclude_from_parent = [])
+        @exclude = exclude_from_parent
+
         nested_attributes.each do |nested_attribute|
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
           @options ||= {}
           @options[:generated_types] ||= []
-          @options[:exclude] = klass.schematic_sandbox.ignored_elements[nested_attribute.name]
+          exclude = klass.schematic_sandbox.ignored_elements[nested_attribute.name].dup
           next if @options[:generated_types].include?(nested_attribute.klass)
-          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, nested_attribute.macro == :has_many, @options)
+
+          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, nested_attribute.macro == :has_many, @options, exclude)
           @options[:generated_types] << nested_attribute.klass
         end
 
@@ -63,7 +66,7 @@ module Schematic
         builder.xs :complexType, "name" => @names.type do |complex_type|
           additional_methods = @klass.schematic_sandbox.added_elements.merge(@options[:methods] || {})
           ignored_methods = @klass.schematic_sandbox.ignored_elements.dup
-          exclude = @options[:exclude]
+          exclude = @exclude
 
           case exclude
           when Hash
