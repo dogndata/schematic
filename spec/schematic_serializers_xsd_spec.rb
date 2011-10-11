@@ -304,6 +304,92 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
+      context "when the model has a nested attribute and ignores a required method of the nested attribute" do
+        with_model :person do
+          model do
+            has_one :house
+            accepts_nested_attributes_for :house
+            schematic do
+              ignore :house => [:address]
+            end
+          end
+        end
+
+        with_model :house do
+          table do |t|
+            t.string :address
+            t.integer :price
+            t.belongs_to :person
+          end
+          model do
+            belongs_to :person
+            validates :address, presence: true
+          end
+        end
+
+        describe "the parent XSD" do
+          subject { Person.to_xsd }
+          it "should be valid" do
+            subject.should include %{"house-attributes"}
+            subject.should include %{"price"}
+            subject.should_not include %{"address"}
+            validate_xsd(subject)
+          end
+        end
+
+        describe "the child XSD" do
+          subject { House.to_xsd }
+          it "should be valid" do
+            subject.should include %{"price"}
+            subject.should include %{"address"}
+            validate_xsd(subject)
+          end
+        end
+      end
+
+      context "when the model has a polymorphic nested attribute and ignores a required method of the nested attribute" do
+        with_model :person do
+          model do
+            has_one :house, as: :homeowner
+            accepts_nested_attributes_for :house
+            schematic do
+              ignore :house => [:address]
+            end
+          end
+        end
+
+        with_model :house do
+          table do |t|
+            t.string :address
+            t.integer :price
+            t.belongs_to :homeowner, polymorphic: true
+          end
+          model do
+            belongs_to :homeowner, polymorphic: true
+            validates :address, presence: true
+          end
+        end
+
+        describe "the parent XSD" do
+          subject { Person.to_xsd }
+          it "should be valid" do
+            subject.should include %{"house-attributes"}
+            subject.should include %{"price"}
+            subject.should_not include %{"address"}
+            validate_xsd(subject)
+          end
+        end
+
+        describe "the child XSD" do
+          subject { House.to_xsd }
+          it "should be valid" do
+            subject.should include %{"price"}
+            subject.should include %{"address"}
+            validate_xsd(subject)
+          end
+        end
+      end
+
       context "when the model has a circular nested attribute reference" do
         with_model :plate do
           model do
