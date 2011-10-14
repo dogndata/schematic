@@ -43,6 +43,14 @@ You can include or exclude additional elements:
     end
   end
 
+You can also change the name of the root tag:
+
+  class Post < ActiveRecord::Base
+    schematic do
+      root "blog-post"
+    end
+  end
+
 If you want to programatically include or exclude elements use:
 
   Post#schematic_sandbox.added_elements and Post#schematic_sandbox.ignored_elements
