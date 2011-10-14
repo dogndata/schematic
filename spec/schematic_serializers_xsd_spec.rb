@@ -650,6 +650,26 @@ describe Schematic::Serializers::Xsd do
 
     end
 
+    context "a model that specifies a different root element" do
+      with_model :ModelWithDifferentRoot do
+        model do
+          schematic do
+            root "my_root"
+          end
+        end
+      end
+
+      subject { ModelWithDifferentRoot.to_xsd }
+
+      it "should use the new root tag name" do
+        subject.should_not include %{"model-with-different-root"}
+        subject.should_not include %{"model-with-different-roots"}
+        subject.should include %{"my-root"}
+        subject.should include %{"my-roots"}
+        validate_xsd(subject)
+      end
+    end
+
   end
 
   describe "#nested_attribute_name" do

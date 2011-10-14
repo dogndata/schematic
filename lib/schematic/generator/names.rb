@@ -1,6 +1,7 @@
 module Schematic
   module Generator
     class Names
+      attr_accessor :root
 
       def initialize(klass)
         @klass = klass
@@ -11,11 +12,11 @@ module Schematic
       end
 
       def element
-        type.underscore.dasherize
+        element_name
       end
 
       def element_collection
-        element.pluralize
+        element_name.pluralize
       end
 
       def collection_type
@@ -26,6 +27,11 @@ module Schematic
         "#{element_collection}-attributes"
       end
 
+      private
+
+      def element_name
+        (@root || type.underscore).dasherize
+      end
     end
   end
 end

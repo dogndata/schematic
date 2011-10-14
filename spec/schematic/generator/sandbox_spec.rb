@@ -77,4 +77,15 @@ describe Schematic::Generator::Sandbox do
       subject.required_elements.should include(:bar)
     end
   end
+
+  describe "setting the root" do
+    it "should change the root element name" do
+      subject.run do
+        root "my_new_root"
+      end
+
+      subject.xsd_generator.names.element.should == "my-new-root"
+      subject.xsd_generator.names.element_collection.should == "my-new-roots"
+    end
+  end
 end

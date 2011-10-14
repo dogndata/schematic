@@ -54,6 +54,10 @@ module Schematic
       def required(*fields)
         fields.each { |field| required_elements << field }
       end
+
+      def root(name)
+        xsd_generator.names.root = name
+      end
     end
   end
 end
