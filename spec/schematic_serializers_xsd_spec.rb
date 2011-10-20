@@ -397,6 +397,54 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
+      context "when the model has a belongs_to nested attribute with an alternate class name" do
+        with_model :school do
+          table do |t|
+            t.string :name
+          end
+        end
+
+        with_model :student do
+          table do |t|
+            t.string :university_id
+          end
+
+          model do
+            belongs_to :university, class_name: "School"
+
+            accepts_nested_attributes_for :university
+          end
+        end
+
+        describe "the parent XSD" do
+          subject { School.to_xsd }
+          it "should be valid" do
+            validate_xsd(subject)
+          end
+        end
+
+        describe "the child XSD" do
+          subject { Student.to_xsd }
+          it "should be valid" do
+            validate_xsd(subject)
+          end
+
+          it "should validate XML" do
+            xml = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<students type="array">
+  <student>
+    <university-attributes>
+      <name>Harvard</name>
+    </university>
+  </student>
+</students>
+            XML
+            validate_xml_against_xsd(xml, subject)
+          end
+        end
+      end
+
       context "when the model has a polymorphic nested attribute and ignores a required method of the nested attribute" do
         with_model :person do
           model do

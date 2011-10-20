@@ -96,6 +96,12 @@ module Schematic
                   "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
                   "minOccurs" => "0",
                   "maxOccurs" => "1"
+              when :belongs_to
+                all.xs :element,
+                  "name" => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
+                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
+                  "minOccurs" => "0",
+                  "maxOccurs" => "1"
               end
             end
 
