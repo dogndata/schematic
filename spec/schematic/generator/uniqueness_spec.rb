@@ -54,29 +54,51 @@ describe Schematic::Generator::Uniqueness do
 
     context "for a model with a column with uniqueness with scope" do
       subject { sanitize_xml(TestModel.to_xsd) }
-      with_model :test_model do
-        table :id => false do |t|
-          t.string "some_field"
-          t.string "other_field"
-        end
 
-        model do
-          validates :some_field, :uniqueness => { :scope => [:other_field] }
+      shared_examples_for "single field in scope" do
+        it "should validate against it's own XSD" do
+          first_instance = TestModel.new(:some_field => "first", :other_field => "unique")
+          another_instance = TestModel.new(:some_field => "first", :other_field => "alsounique")
+          duplicate_instance = TestModel.new(:some_field => "first", :other_field => "unique")
+          xml = [first_instance, duplicate_instance, another_instance].to_xml
+          lambda {
+            validate_xml_against_xsd(xml, subject)
+          }.should raise_error
+          xml = [first_instance, another_instance].to_xml
+          lambda {
+            validate_xml_against_xsd(xml, subject)
+          }.should_not raise_error
         end
       end
 
-      it "should validate against it's own XSD" do
-        first_instance = TestModel.new(:some_field => "first", :other_field => "unique")
-        another_instance = TestModel.new(:some_field => "first", :other_field => "alsounique")
-        duplicate_instance = TestModel.new(:some_field => "first", :other_field => "unique")
-        xml = [first_instance, duplicate_instance, another_instance].to_xml
-        lambda {
-          validate_xml_against_xsd(xml, subject)
-        }.should raise_error
-        xml = [first_instance, another_instance].to_xml
-        lambda {
-          validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+      context "when the scope is a symbol" do
+        with_model :test_model do
+          table :id => false do |t|
+            t.string "some_field"
+            t.string "other_field"
+          end
+
+          model do
+            validates :some_field, :uniqueness => { :scope => :other_field }
+          end
+        end
+
+        it_behaves_like "single field in scope"
+      end
+
+      context "when the scope is an array" do
+        with_model :test_model do
+          table :id => false do |t|
+            t.string "some_field"
+            t.string "other_field"
+          end
+
+          model do
+            validates :some_field, :uniqueness => { :scope => [:other_field] }
+          end
+        end
+
+        it_behaves_like "single field in scope"
       end
     end
 
