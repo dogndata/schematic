@@ -47,7 +47,7 @@ describe Schematic::Serializers::Xsd do
         it "should mark that the field minimum occurrences is 1" do
           xsd = generate_xsd_for_model(SomeModel) do
             <<-XML
-              <xs:element name="title" minOccurs="1" maxOccurs="1">
+              <xs:element name="title" minOccurs="1" maxOccurs="1" nillable="false">
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="String">
@@ -120,7 +120,7 @@ describe Schematic::Serializers::Xsd do
         it "should mark that the field minimum occurrences is 1" do
           xsd = generate_xsd_for_model(SomeModel) do
             <<-XML
-              <xs:element name="current" minOccurs="1" maxOccurs="1">
+              <xs:element name="current" minOccurs="1" maxOccurs="1" nillable="false">
                 <xs:complexType>
                   <xs:simpleContent>
                     <xs:restriction base="Boolean">

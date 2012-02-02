@@ -13,7 +13,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      it { should == "0" }
+      it { should == 0 }
     end
 
     context "given a column with presence of but allow blank" do
@@ -26,7 +26,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      it { should == "0" }
+      it { should == 0 }
     end
 
     context "given a column with presence of and no allow blank" do
@@ -39,7 +39,7 @@ describe Schematic::Serializers::Xsd do
         end
       end
 
-      it { should == "1" }
+      it { should == 1 }
     end
   end
 

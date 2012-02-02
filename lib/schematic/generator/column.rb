@@ -19,10 +19,14 @@ module Schematic
       def generate(builder)
         return if skip_generation?
 
-        builder.xs :element,
+        options = {
           "name" => @column.name.dasherize,
-          "minOccurs" => minimum_occurrences_for_column,
-          "maxOccurs" => "1" do |field|
+          "minOccurs" => minimum_occurrences_for_column.to_s,
+          "maxOccurs" => "1"
+        }
+        options.merge!({"nillable" => "false"}) if minimum_occurrences_for_column > 0
+
+        builder.xs :element, options do |field|
           field.xs :complexType do |complex_type|
             complex_type.xs :simpleContent do |simple_content|
               simple_content.xs :restriction, "base" => map_type(@column) do |restriction|
@@ -36,18 +40,18 @@ module Schematic
       end
 
       def minimum_occurrences_for_column
-        return "1" if @required_methods.include?(@column.name.to_sym)
-        return "0" unless @klass.respond_to?(:_validators)
+        return 1 if @required_methods.include?(@column.name.to_sym)
+        return 0 unless @klass.respond_to?(:_validators)
         @klass._validators[@column.name.to_sym].each do |column_validation|
           next unless column_validation.is_a?  ActiveModel::Validations::PresenceValidator
           if column_validation.options[:allow_blank] != true &&
             column_validation.options[:if].nil? &&
             column_validation.options[:unless].nil?
 
-            return "1"
+            return 1
           end
         end
-        "0"
+        0
       end
 
       def map_type(column)
