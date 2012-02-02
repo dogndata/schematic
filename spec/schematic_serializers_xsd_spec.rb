@@ -19,6 +19,7 @@ describe Schematic::Serializers::Xsd do
         before do
           class SomeClass
             include ActiveModel::Serializers::Xml
+            attr_accessor :foo, :bar
             def attributes=(hash)
               @hash = hash
             end
