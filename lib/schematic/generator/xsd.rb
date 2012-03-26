@@ -11,8 +11,8 @@ module Schematic
 
       def options=(hash = {})
         @options = hash
-        @options[:generated_types] ||= []
-        @options[:generated_types] << @klass
+        @options[:generated_singular_types] ||= []
+        @options[:generated_plural_types] ||= []
         @options
       end
 
@@ -35,22 +35,33 @@ module Schematic
       end
 
       def generate(builder, klass, include_collection=true, exclude_from_parent = [])
+        @iteration ||= 0
         @exclude = exclude_from_parent
-
         nested_attributes.each do |nested_attribute|
           next if nested_attribute.klass == klass
           next if nested_attribute.klass == klass.superclass
           @options ||= {}
-          @options[:generated_types] ||= []
+          @options[:generated_singular_types] ||= []
+          @options[:generated_plural_types] ||= []
           exclude = klass.schematic_sandbox.ignored_elements[nested_attribute.name].dup
-          next if @options[:generated_types].include?(nested_attribute.klass)
 
-          nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, nested_attribute.macro == :has_many, @options, exclude)
-          @options[:generated_types] << nested_attribute.klass
+          if nested_attribute.macro == :has_many && !@options[:generated_plural_types].include?(nested_attribute.klass)
+            nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, true, @options, exclude)
+            @options[:generated_plural_types] << nested_attribute.klass
+          elsif !@options[:generated_singular_types].include?(nested_attribute.klass)
+            nested_attribute.klass.schematic_sandbox.generate_xsd(builder, klass, false, @options, exclude)
+            @options[:generated_singular_types] << nested_attribute.klass
+          end
         end
-
-        generate_complex_type_for_collection(builder) if include_collection
-        generate_complex_type_for_model(builder)
+        if include_collection && !@options[:generated_plural_types].include?(@names.collection_type)
+          generate_complex_type_for_collection(builder)
+          @options[:generated_plural_types] << @names.collection_type
+        end
+        unless @options[:generated_singular_types].include?(@names.type)
+          generate_complex_type_for_model(builder)
+          @options[:generated_singular_types] << @names.type
+        end
+        builder
       end
 
       def generate_complex_type_for_collection(builder)
@@ -120,7 +131,7 @@ module Schematic
       def generate_uniqueness_constraints(builder)
         return unless @klass.respond_to?(:columns)
         @klass.columns.each do |column|
-           Uniqueness.new(@klass, column).generate(builder)
+          Uniqueness.new(@klass, column).generate(builder)
         end
       end
 

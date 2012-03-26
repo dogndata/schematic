@@ -739,4 +739,43 @@ describe Schematic::Serializers::Xsd do
       xsd.nested_attribute_name(:very_special_children).should == "very-special-children-attributes"
     end
   end
+  context "when the model has a nested attribute with a different class name and foreign key than the has_many association" do
+    with_model :foo do
+      model do
+        has_one :bar, :class_name => "Quz", :foreign_key => "bar_id"
+        has_many :children, :class_name => "Quz", :foreign_key => "children_id"
+        accepts_nested_attributes_for :children
+        accepts_nested_attributes_for :bar
+      end
+    end
+    with_model :quz do
+      table do |t|
+        t.integer :bar_id
+        t.integer :children_id
+        t.string :name
+      end
+    end
+    subject { Foo.to_xsd }
+
+    it "should generate a valid XSD" do
+      test_xml = <<-END
+      <?xml version="1.0" encoding="UTF-8"?>
+      <foos>
+        <foo>
+          <children-attributes>
+            <quz>
+              <name>Joe</name>
+            </quz>
+          </children-attributes>
+        </foo>
+      </foos>
+      END
+
+      subject.should include "Quz"
+      subject.should include "Quzs"
+      validate_xml_against_xsd(test_xml, subject)
+    end
+  end
 end
+
+
