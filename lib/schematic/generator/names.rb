@@ -1,7 +1,7 @@
 module Schematic
   module Generator
     class Names
-      attr_accessor :root
+      attr_accessor :root, :klass
 
       def initialize(klass)
         @klass = klass
