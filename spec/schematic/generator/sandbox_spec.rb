@@ -78,6 +78,23 @@ describe Schematic::Generator::Sandbox do
     end
   end
 
+  describe "not requiring elements" do
+    it "should add the method to the non-required list" do
+      subject.run do
+        not_required :foo
+      end
+      subject.non_required_elements.should include(:foo)
+    end
+
+    it "accepts multiple fields" do
+      subject.run do
+        not_required :foo, :bar
+      end
+      subject.non_required_elements.should include(:foo)
+      subject.non_required_elements.should include(:bar)
+    end
+  end
+
   describe "setting the root" do
     it "should change the root element name" do
       subject.run do

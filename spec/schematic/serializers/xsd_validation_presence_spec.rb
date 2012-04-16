@@ -135,5 +135,40 @@ describe Schematic::Serializers::Xsd do
         end
       end
     end
+
+    context "with a model with field explicitly not required" do
+      subject { sanitize_xml(ModelWithNotRequiredField.to_xsd) }
+
+      with_model :model_with_not_required_field do
+        table :id => false do |t|
+          t.string :some_field
+        end
+
+        model do
+          validates_presence_of :some_field
+
+          schematic do
+            not_required :some_field
+          end
+        end
+      end
+
+      it "should mark that the field minimum occurrences is 1" do
+        xsd = generate_xsd_for_model(ModelWithNotRequiredField) do
+          <<-XML
+            <xs:element name="some-field" minOccurs="0" maxOccurs="1">
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:restriction base="String">
+                  </xs:restriction>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+          XML
+        end
+
+        subject.should == xsd
+      end
+    end
   end
 end

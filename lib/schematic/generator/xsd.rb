@@ -89,9 +89,10 @@ module Schematic
           end
 
           required_methods = @klass.schematic_sandbox.required_elements
+          non_required_methods = @klass.schematic_sandbox.non_required_elements
 
           complex_type.xs :all do |all|
-            generate_column_elements(all, additional_methods, ignored_methods, required_methods)
+            generate_column_elements(all, additional_methods, ignored_methods, required_methods, non_required_methods)
 
             nested_attributes.each do |nested_attribute|
               case nested_attribute.macro
@@ -121,10 +122,10 @@ module Schematic
         end
       end
 
-      def generate_column_elements(builder, additional_methods, ignored_methods, required_methods)
+      def generate_column_elements(builder, additional_methods, ignored_methods, required_methods, non_required_methods)
         return unless @klass.respond_to?(:columns)
         @klass.columns.each do |column|
-          Column.new(@klass, column, additional_methods, ignored_methods, required_methods).generate(builder)
+          Column.new(@klass, column, additional_methods, ignored_methods, required_methods, non_required_methods).generate(builder)
         end
       end
 
