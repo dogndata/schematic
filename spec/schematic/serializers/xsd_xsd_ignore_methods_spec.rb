@@ -8,6 +8,7 @@ describe Schematic::Serializers::Xsd do
       end
 
       model do
+        self.primary_key = :title
         schematic do
           ignore :title
         end

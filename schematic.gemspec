@@ -14,9 +14,10 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "schematic"
 
-  s.add_dependency('activerecord', '>= 3.0.0')
+  s.add_dependency('activerecord', '~> 4.0')
   s.add_dependency('builder')
-  s.add_development_dependency('rspec-rails', '= 2.7')
+  s.add_development_dependency('rspec', '~> 2.14')
+  s.add_development_dependency('rspec-rails')
   s.add_development_dependency('with_model', '>= 0.2.4')
   s.add_development_dependency('nokogiri')
   s.add_development_dependency('sqlite3')

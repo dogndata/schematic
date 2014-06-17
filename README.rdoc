@@ -95,7 +95,7 @@ You can have a custom enumeration restriction from a custom validater:
 
 == REQUIREMENTS
 
-* ActiveRecord 3.x
+* ActiveRecord 4.x
 
 == LICENSE
 

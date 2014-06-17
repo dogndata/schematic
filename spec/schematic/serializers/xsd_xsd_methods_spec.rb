@@ -44,6 +44,7 @@ describe Schematic::Serializers::Xsd do
         end
 
         model do
+          self.primary_key = :foo
           validates :foo_bar, :inclusion => { :in => [1,2,3] }
 
           def foo_bar=(value)
@@ -116,6 +117,7 @@ describe Schematic::Serializers::Xsd do
         end
 
         model do
+          self.primary_key = :foo
 
           attr_accessor :bar
 
@@ -183,6 +185,8 @@ describe Schematic::Serializers::Xsd do
         end
 
         model do
+          self.primary_key = :bar
+
           def foo=(value)
             @foo = value
           end

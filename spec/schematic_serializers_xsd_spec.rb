@@ -70,6 +70,8 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
+            self.primary_key = :some_string
+
             validates :some_string, :presence => true, :length => { :maximum => 100 }
             validates :some_text, :presence => true
             validates :some_date, :presence => true, :allow_blank => true
@@ -645,6 +647,10 @@ describe Schematic::Serializers::Xsd do
         with_model :some_model do
           table :id => false do |t|
             t.float 'some_float'
+          end
+
+          model do
+            self.primary_key = :some_float
           end
         end
 

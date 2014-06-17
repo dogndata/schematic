@@ -20,6 +20,7 @@ describe "Schematic::Generator::Restrictions::Mixin" do
         end
 
         model do
+          self.primary_key = :title
           validates_each :title do |object, attr, value|
           end
         end

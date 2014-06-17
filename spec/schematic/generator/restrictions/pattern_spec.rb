@@ -10,6 +10,7 @@ describe Schematic::Generator::Restrictions::Pattern do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :format => { :with => /[a-z]#[0-9]/ }
         end
       end
@@ -55,6 +56,7 @@ describe Schematic::Generator::Restrictions::Pattern do
         end
 
         model do
+          self.primary_key = :email
           validates :email, :format => { :with => /\A([\w\.%\+\-`']+)@([\w\-]+\.)+([\w]{2,})\Z/ }
           validates :money, :format => { :with =>  /\$?[,0-9]+(?:\.\d+)?/ }
         end

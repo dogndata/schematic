@@ -11,6 +11,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
+            self.primary_key = :title
             validate :title, :presence => true, :allow_blank => true
           end
         end
@@ -40,6 +41,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
+            self.primary_key = :title
             validates :title, :presence => true
           end
         end
@@ -70,6 +72,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
+            self.primary_key = :title
             validates :title, :presence => true, :if => lambda { |model| false }
             validates :description, :presence => true, :unless => lambda { |model| true }
           end
@@ -111,6 +114,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
+            self.primary_key = :current
             schematic do
               required :current
             end
@@ -145,6 +149,7 @@ describe Schematic::Serializers::Xsd do
         end
 
         model do
+          self.primary_key = :some_field
           validates_presence_of :some_field
 
           schematic do

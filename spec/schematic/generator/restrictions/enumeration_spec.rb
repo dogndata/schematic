@@ -20,6 +20,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :inclusion => { :in => ["a", "b", "c"] }
           validates :should_be_skipped, :inclusion => ["a", "b", "c"], :if => lambda { false }
           validates :should_also_be_skipped, :inclusion => ["a", "b", "c"], :unless => lambda { false }

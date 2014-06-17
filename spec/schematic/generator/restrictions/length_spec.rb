@@ -10,6 +10,7 @@ describe Schematic::Generator::Restrictions::Length do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :length => { :within => 10..20 }
         end
       end
@@ -36,6 +37,7 @@ describe Schematic::Generator::Restrictions::Length do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :length => { :in => 10..20 }
         end
       end
@@ -62,6 +64,7 @@ describe Schematic::Generator::Restrictions::Length do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :length => { :minimum => 10 }
         end
       end
@@ -84,6 +87,7 @@ describe Schematic::Generator::Restrictions::Length do
           end
 
           model do
+            self.primary_key = :title
             validates :title, :length => { :maximum => 100 }, :allow_blank => true
           end
         end
@@ -123,7 +127,8 @@ describe Schematic::Generator::Restrictions::Length do
           end
 
           model do
-            validates :title, :length => { :maximum => 100 }, :allow_blank => false
+            self.primary_key = :title
+            validates :title, :length => { :maximum => 100 }
           end
         end
 
@@ -154,6 +159,7 @@ describe Schematic::Generator::Restrictions::Length do
           end
 
           model do
+            self.primary_key = :title
             validates :title, :length => { :maximum => 100 }, :if => lambda { |model| false }
           end
         end

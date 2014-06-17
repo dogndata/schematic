@@ -10,6 +10,7 @@ describe Schematic::Generator::Uniqueness do
         end
 
         model do
+          self.primary_key = :some_field
           validates :some_field, :uniqueness => true
         end
       end
@@ -79,6 +80,7 @@ describe Schematic::Generator::Uniqueness do
           end
 
           model do
+            self.primary_key = :some_field
             validates :some_field, :uniqueness => { :scope => :other_field }
           end
         end
@@ -94,6 +96,7 @@ describe Schematic::Generator::Uniqueness do
           end
 
           model do
+            self.primary_key = :some_field
             validates :some_field, :uniqueness => { :scope => [:other_field] }
           end
         end
@@ -111,6 +114,7 @@ describe Schematic::Generator::Uniqueness do
         end
 
         model do
+          self.primary_key = :some_field
           validates :some_field, :uniqueness => true
           validates :other_field, :uniqueness => true
         end

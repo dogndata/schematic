@@ -11,6 +11,10 @@ describe Schematic::Serializers::Xsd do
         table :id => false do |t|
           t.string "title"
         end
+
+        model do
+          self.primary_key = :title
+        end
       end
 
       it { should == 0 }
@@ -22,6 +26,7 @@ describe Schematic::Serializers::Xsd do
           t.string "title"
         end
         model do
+          self.primary_key = :title
           validates :title, :presence => true, :allow_blank => true
         end
       end
@@ -35,6 +40,7 @@ describe Schematic::Serializers::Xsd do
           t.string "title"
         end
         model do
+          self.primary_key = :title
           validates :title, :presence => true
         end
       end

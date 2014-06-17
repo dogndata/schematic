@@ -22,6 +22,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
         end
 
         model do
+          self.primary_key = :title
           validates :title, :crazy_town => true
         end
       end

@@ -10,6 +10,7 @@ describe Schematic::Generator::Restrictions::Numericality do
         end
 
         model do
+          self.primary_key = :some_field
           validates :some_field, :numericality => true
         end
       end
