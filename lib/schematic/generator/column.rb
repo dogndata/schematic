@@ -57,7 +57,7 @@ module Schematic
       end
 
       def map_type(column)
-        Types::COMPLEX[column.type][:complex_type]
+        Types::COMPLEX.fetch(column.type)[:complex_type]
       end
 
       def skip_generation?
