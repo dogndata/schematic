@@ -9,10 +9,11 @@ module Schematic
         :datetime => { :complex_type => "DateTime", :xsd_type => "xs:dateTime" },
         :date => { :complex_type => "Date", :xsd_type => "xs:date" },
         :boolean => { :complex_type => "Boolean", :xsd_type => "xs:boolean" },
+        :uuid => { :complex_type => "String", :xsd_type => "xs:string" },
       }
 
       def self.xsd(builder)
-        Types::COMPLEX.each do |key, value|
+        Types::COMPLEX.values.uniq.each do |value|
           complex_type_name = value[:complex_type]
           xsd_type = value[:xsd_type]
           builder.xs :complexType, "name" => complex_type_name do |complex_type|
