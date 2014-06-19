@@ -2,15 +2,15 @@ module Schematic
   module Generator
     class Types
       COMPLEX = {
-        :integer  => { :complex_type => 'Integer',  :xsd_type => 'xs:integer' },
-        :float    => { :complex_type => 'Float',    :xsd_type => 'xs:float' },
-        :string   => { :complex_type => 'String',   :xsd_type => 'xs:string' },
-        :text     => { :complex_type => 'Text',     :xsd_type => 'xs:string' },
-        :datetime => { :complex_type => 'DateTime', :xsd_type => 'xs:dateTime' },
-        :date     => { :complex_type => 'Date',     :xsd_type => 'xs:date' },
-        :boolean  => { :complex_type => 'Boolean',  :xsd_type => 'xs:boolean' },
-        :uuid     => { :complex_type => 'String',   :xsd_type => 'xs:string' },
-      }
+        :integer  => { :complex_type => 'Integer',  :xsd_type => 'xs:integer' }.freeze,
+        :float    => { :complex_type => 'Float',    :xsd_type => 'xs:float' }.freeze,
+        :string   => { :complex_type => 'String',   :xsd_type => 'xs:string' }.freeze,
+        :text     => { :complex_type => 'Text',     :xsd_type => 'xs:string' }.freeze,
+        :datetime => { :complex_type => 'DateTime', :xsd_type => 'xs:dateTime' }.freeze,
+        :date     => { :complex_type => 'Date',     :xsd_type => 'xs:date' }.freeze,
+        :boolean  => { :complex_type => 'Boolean',  :xsd_type => 'xs:boolean' }.freeze,
+        :uuid     => { :complex_type => 'String',   :xsd_type => 'xs:string' }.freeze,
+      }.freeze
 
       def self.xsd(builder)
         Types::COMPLEX.values.uniq.each do |value|
