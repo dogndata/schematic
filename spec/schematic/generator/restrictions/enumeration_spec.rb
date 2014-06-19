@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Restrictions::Enumeration do
+describe "Schematic::Generator::Restrictions::Enumeration" do
   describe ".to_xsd" do
     context "with a model with inclusion validations" do
       subject { sanitize_xml(EnumerationModel.to_xsd) }

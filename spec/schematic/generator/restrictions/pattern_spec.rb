@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Restrictions::Pattern do
+describe "Schematic::Generator::Restrictions::Pattern" do
   describe ".to_xsd" do
     context "with a model with format validations" do
       subject { sanitize_xml(PatternModel.to_xsd) }

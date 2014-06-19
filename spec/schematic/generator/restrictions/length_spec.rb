@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Restrictions::Length do
+describe "Schematic::Generator::Restrictions::Length" do
   describe ".to_xsd" do
     context "with a model with range length validations" do
       subject { sanitize_xml(LengthModelRange.to_xsd) }

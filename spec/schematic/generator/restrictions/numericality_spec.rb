@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Restrictions::Numericality do
+describe "Schematic::Generator::Restrictions::Numericality" do
   describe ".to_xsd" do
     context "with a model with numericality validations" do
       subject { sanitize_xml(TestModel.to_xsd) }

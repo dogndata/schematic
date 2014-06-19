@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Uniqueness do
+describe "Schematic::Generator::Uniqueness" do
   describe ".to_xsd" do
     context "with a model with a uniqueness validation" do
       subject { sanitize_xml(TestModel.to_xsd) }
