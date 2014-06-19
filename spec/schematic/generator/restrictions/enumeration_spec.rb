@@ -40,9 +40,9 @@ describe "Schematic::Generator::Restrictions::Enumeration" do
       it "should validate against it's own XSD" do
         invalid_instance = EnumerationModel.new(:title => 'd')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         valid_instance = EnumerationModel.new(:title => 'a',
                                               :should_be_skipped => 'a',
                                               :should_also_be_skipped => 'a',
@@ -54,9 +54,9 @@ describe "Schematic::Generator::Restrictions::Enumeration" do
                                               :skip_enumeration => 2,
                                               :skip_inclusion_set_lambda => 2)
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
 
       it "should mark that the field with the allowed values" do
@@ -151,7 +151,7 @@ describe "Schematic::Generator::Restrictions::Enumeration" do
           XML
         end
 
-        subject.should == xsd
+        expect(subject).to eq(xsd)
       end
     end
   end

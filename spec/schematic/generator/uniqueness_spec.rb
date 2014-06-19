@@ -20,13 +20,13 @@ describe "Schematic::Generator::Uniqueness" do
         another_instance = TestModel.new(:some_field => 'second')
         duplicate_instance = TestModel.new(:some_field => 'first')
         xml = [first_instance, duplicate_instance, another_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         xml = [first_instance, another_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
 
       it "should mark that the field with the allowed values" do
@@ -49,7 +49,7 @@ describe "Schematic::Generator::Uniqueness" do
           XML
         end
 
-        subject.should == xsd
+        expect(subject).to eq(xsd)
       end
     end
 
@@ -62,13 +62,13 @@ describe "Schematic::Generator::Uniqueness" do
           another_instance = TestModel.new(:some_field => 'first', :other_field => 'alsounique')
           duplicate_instance = TestModel.new(:some_field => 'first', :other_field => 'unique')
           xml = [first_instance, duplicate_instance, another_instance].to_xml
-          lambda {
+          expect {
             validate_xml_against_xsd(xml, subject)
-          }.should raise_error
+          }.to raise_error
           xml = [first_instance, another_instance].to_xml
-          lambda {
+          expect {
             validate_xml_against_xsd(xml, subject)
-          }.should_not raise_error
+          }.not_to raise_error
         end
       end
 
@@ -127,19 +127,19 @@ describe "Schematic::Generator::Uniqueness" do
         other_duplicate_instance = TestModel.new(:some_field => 'fourth', :other_field => 'unique')
 
         xml = [first_instance, duplicate_instance, another_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
 
         xml = [first_instance, other_duplicate_instance, another_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
 
         xml = [first_instance, another_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
   end

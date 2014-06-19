@@ -33,7 +33,7 @@ describe Schematic::Serializers::Xsd do
           XML
         end
 
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
     end
 
@@ -91,7 +91,7 @@ describe Schematic::Serializers::Xsd do
           XML
         end
 
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
 
       it "should validate against the xsd" do
@@ -99,14 +99,14 @@ describe Schematic::Serializers::Xsd do
 
         invalid_instance = SomeModel.new(:foo_bar => "d")
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, xsd)
-        }.should raise_error
+        }.to raise_error
         valid_instance = SomeModel.new(:foo_bar => 1)
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, xsd)
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
 
@@ -159,7 +159,7 @@ describe Schematic::Serializers::Xsd do
             </xs:element>
           XML
         end
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
 
       it "should validate against the xsd" do
@@ -167,14 +167,14 @@ describe Schematic::Serializers::Xsd do
 
         invalid_instance = SomeModel.new(:bar => 'invalid option')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, xsd)
-        }.should raise_error
+        }.to raise_error
         valid_instance = SomeModel.new(:bar => 'b')
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, xsd)
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
 
@@ -240,21 +240,21 @@ describe Schematic::Serializers::Xsd do
             </xs:element>
           XML
         end
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
 
       it "should validate against its own XSD" do
         invalid_instance = SomeModel.new(:foo => ['a', 'b'])
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, SomeModel.to_xsd)
-        }.should raise_error
+        }.to raise_error
 
         instance = SomeModel.new(:foo => ['1', '2'])
         xml = [instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, SomeModel.to_xsd)
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
 
@@ -312,7 +312,7 @@ describe Schematic::Serializers::Xsd do
           XML
         end
 
-        sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
     end
   end

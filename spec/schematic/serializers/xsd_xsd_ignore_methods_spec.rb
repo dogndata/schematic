@@ -19,7 +19,7 @@ describe Schematic::Serializers::Xsd do
       xsd = generate_xsd_for_model(SomeModel) do
       end
 
-      sanitize_xml(SomeModel.to_xsd).should eq(xsd)
+      expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
     end
   end
 end

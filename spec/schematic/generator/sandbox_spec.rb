@@ -10,15 +10,15 @@ describe Schematic::Generator::Sandbox do
         subject.run do
           ignore :foo
         end
-        subject.ignored_elements.should include(:foo)
+        expect(subject.ignored_elements).to include(:foo)
       end
 
       it "accepts multiple fields" do
         subject.run do
           ignore :foo, :bar
         end
-        subject.ignored_elements.should include(:foo)
-        subject.ignored_elements.should include(:bar)
+        expect(subject.ignored_elements).to include(:foo)
+        expect(subject.ignored_elements).to include(:bar)
       end
     end
 
@@ -27,7 +27,7 @@ describe Schematic::Generator::Sandbox do
         subject.run do
           ignore :foo => [:bar]
         end
-        subject.ignored_elements[:foo].should == [:bar]
+        expect(subject.ignored_elements[:foo]).to eq([:bar])
       end
     end
   end
@@ -38,7 +38,7 @@ describe Schematic::Generator::Sandbox do
         subject.run do
           add :foo
         end
-        subject.added_elements.keys.should include(:foo)
+        expect(subject.added_elements.keys).to include(:foo)
       end
     end
 
@@ -47,7 +47,7 @@ describe Schematic::Generator::Sandbox do
         subject.run do
           add :foo => { :bar => nil }
         end
-        subject.added_elements[:foo].should == { :bar => nil }
+        expect(subject.added_elements[:foo]).to eq({ :bar => nil })
       end
     end
 
@@ -56,7 +56,7 @@ describe Schematic::Generator::Sandbox do
         subject.run do
           add :foo => [:bar]
         end
-        subject.added_elements[:foo].should == [:bar]
+        expect(subject.added_elements[:foo]).to eq([:bar])
       end
     end
   end
@@ -66,15 +66,15 @@ describe Schematic::Generator::Sandbox do
       subject.run do
         required :foo
       end
-      subject.required_elements.should include(:foo)
+      expect(subject.required_elements).to include(:foo)
     end
 
     it "accepts multiple fields" do
       subject.run do
         required :foo, :bar
       end
-      subject.required_elements.should include(:foo)
-      subject.required_elements.should include(:bar)
+      expect(subject.required_elements).to include(:foo)
+      expect(subject.required_elements).to include(:bar)
     end
   end
 
@@ -83,15 +83,15 @@ describe Schematic::Generator::Sandbox do
       subject.run do
         not_required :foo
       end
-      subject.non_required_elements.should include(:foo)
+      expect(subject.non_required_elements).to include(:foo)
     end
 
     it "accepts multiple fields" do
       subject.run do
         not_required :foo, :bar
       end
-      subject.non_required_elements.should include(:foo)
-      subject.non_required_elements.should include(:bar)
+      expect(subject.non_required_elements).to include(:foo)
+      expect(subject.non_required_elements).to include(:bar)
     end
   end
 
@@ -101,8 +101,8 @@ describe Schematic::Generator::Sandbox do
         root 'my_new_root'
       end
 
-      subject.xsd_generator.names.element.should == 'my-new-root'
-      subject.xsd_generator.names.element_collection.should == 'my-new-roots'
+      expect(subject.xsd_generator.names.element).to eq('my-new-root')
+      expect(subject.xsd_generator.names.element_collection).to eq('my-new-roots')
     end
   end
 end

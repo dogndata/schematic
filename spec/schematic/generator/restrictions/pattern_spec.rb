@@ -18,14 +18,14 @@ describe "Schematic::Generator::Restrictions::Pattern" do
       it "should validate against it's own XSD" do
         invalid_instance = PatternModel.new(:title => '1-2')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         valid_instance = PatternModel.new(:title => 'a#5')
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
 
       it "should mark that the field with the allowed values" do
@@ -43,7 +43,7 @@ describe "Schematic::Generator::Restrictions::Pattern" do
           XML
         end
 
-        subject.should == xsd
+        expect(subject).to eq(xsd)
       end
     end
 
@@ -65,19 +65,19 @@ describe "Schematic::Generator::Restrictions::Pattern" do
       it "should validate against it's own XSD" do
         invalid_instance = PatternModel.new(:email => '@blah')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         invalid_instance = PatternModel.new(:money => 'whatever')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         valid_instance = PatternModel.new(:email => 'foo@bar.com', :money => '$99.95')
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
   end

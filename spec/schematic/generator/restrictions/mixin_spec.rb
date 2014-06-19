@@ -29,14 +29,14 @@ describe "Schematic::Generator::Restrictions::Mixin" do
       it "should validate against it's own XSD" do
         invalid_instance = TestModel.new(:title => 'cake')
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         valid_instance = TestModel.new(:title => 'cheese')
         xml = [valid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should_not raise_error
+        }.not_to raise_error
       end
 
       it "should mark that the field with the allowed values" do
@@ -54,7 +54,7 @@ describe "Schematic::Generator::Restrictions::Mixin" do
           XML
         end
 
-        subject.should == xsd
+        expect(subject).to eq(xsd)
       end
     end
   end

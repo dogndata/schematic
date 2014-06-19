@@ -18,14 +18,14 @@ describe "Schematic::Generator::Restrictions::Length" do
       it "should validate against it's own XSD" do
         invalid_instance = LengthModelRange.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
       end
     end
 
@@ -45,14 +45,14 @@ describe "Schematic::Generator::Restrictions::Length" do
       it "should validate against it's own XSD" do
         invalid_instance = LengthModelRange.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
         invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
       end
     end
 
@@ -72,9 +72,9 @@ describe "Schematic::Generator::Restrictions::Length" do
       it "should validate against it's own XSD" do
         invalid_instance = LengthModelMinimum.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
-        lambda {
+        expect {
           validate_xml_against_xsd(xml, subject)
-        }.should raise_error
+        }.to raise_error
       end
     end
 
@@ -95,9 +95,9 @@ describe "Schematic::Generator::Restrictions::Length" do
         it "should validate against it's own XSD" do
           invalid_instance = LengthModelOne.new(:title => 'A' * 201)
           xml = [invalid_instance].to_xml
-          lambda {
+          expect {
             validate_xml_against_xsd(xml, subject)
-          }.should raise_error
+          }.to raise_error
         end
 
         it "should mark that the field minimum occurrences is 0 but still list the length" do
@@ -115,7 +115,7 @@ describe "Schematic::Generator::Restrictions::Length" do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
 
@@ -147,7 +147,7 @@ describe "Schematic::Generator::Restrictions::Length" do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
 
@@ -178,7 +178,7 @@ describe "Schematic::Generator::Restrictions::Length" do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
     end

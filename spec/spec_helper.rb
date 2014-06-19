@@ -5,6 +5,14 @@ require 'schematic'
 
 RSpec.configure do |config|
   config.extend WithModel
+
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
+
+  config.mock_with :rspec do |c|
+    c.syntax = :expect
+  end
 end
 
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
@@ -20,7 +28,7 @@ def validate_xml_against_xsd(xml, xsd)
   xsd.validate(doc).each do |error|
     errors << error.message
   end
-  errors.should == []
+  expect(errors).to eq([])
 ensure
   tempfile.close
 end
@@ -31,7 +39,7 @@ def validate_xsd(xml)
 
   doc = Nokogiri::XML.parse(xml)
   meta_xsd.validate(doc).each do |error|
-    error.message.should be_nil
+    expect(error.message).to be_nil
   end
 end
 

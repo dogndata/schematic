@@ -14,11 +14,11 @@ describe Schematic::Serializers::Xsd do
       subject { EmptyModel }
 
       it "should allow the model to be extended" do
-        lambda {
+        expect {
           subject.class_eval do
             extend Schematic::Serializers::Xsd
           end
-        }.should_not raise_error
+        }.not_to raise_error
       end
     end
 
@@ -26,11 +26,11 @@ describe Schematic::Serializers::Xsd do
       subject { EmptyClass }
 
       it "should raise an exception" do
-        lambda {
+        expect {
           subject.class_eval do
             extend Schematic::Serializers::Xsd
           end
-        }.should raise_error(Schematic::ClassMissingAttributes)
+        }.to raise_error(Schematic::ClassMissingAttributes)
       end
 
       context "and it implements #attributes" do
@@ -42,11 +42,11 @@ describe Schematic::Serializers::Xsd do
           end
         end
         it "should allow the model to be extended" do
-          lambda {
+          expect {
             subject.class_eval do
               extend Schematic::Serializers::Xsd
             end
-          }.should_not raise_error
+          }.not_to raise_error
         end
       end
     end
@@ -55,11 +55,11 @@ describe Schematic::Serializers::Xsd do
       subject { Object }
 
       it "should raise an exception" do
-        lambda {
+        expect {
           subject.class_eval do
           extend Schematic::Serializers::Xsd
           end
-        }.should raise_error(Schematic::ClassMissingXmlSerializer)
+        }.to raise_error(Schematic::ClassMissingXmlSerializer)
       end
     end
   end

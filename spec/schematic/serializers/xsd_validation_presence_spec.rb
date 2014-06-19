@@ -30,7 +30,7 @@ describe Schematic::Serializers::Xsd do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
 
@@ -60,7 +60,7 @@ describe Schematic::Serializers::Xsd do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
 
@@ -100,7 +100,7 @@ describe Schematic::Serializers::Xsd do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
     end
@@ -135,7 +135,7 @@ describe Schematic::Serializers::Xsd do
             XML
           end
 
-          subject.should == xsd
+          expect(subject).to eq(xsd)
         end
       end
     end
@@ -172,7 +172,7 @@ describe Schematic::Serializers::Xsd do
           XML
         end
 
-        subject.should == xsd
+        expect(subject).to eq(xsd)
       end
     end
   end
