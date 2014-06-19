@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schematic::Generator::Restrictions::Enumeration do
+describe Schematic::Generator::Restrictions::Custom do
   describe ".to_xsd" do
     context "with a model with custom validations" do
       before do
