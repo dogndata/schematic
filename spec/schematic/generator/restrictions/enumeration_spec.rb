@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/extensions/active_model/validations/inclusion'
 
 describe Schematic::Generator::Restrictions::Enumeration do
   describe ".to_xsd" do
