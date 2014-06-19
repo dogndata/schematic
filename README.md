@@ -1,5 +1,7 @@
 # [Schematic](http://github.com/casecommons/schematic/)
 
+[![Gem Version](https://badge.fury.io/rb/schematic.svg)](https://rubygems.org/gems/schematic)
+
 Automatic XSD generation for your ActiveRecord models.
 
 ## Installation
