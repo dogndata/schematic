@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'autotest'
   spec.add_development_dependency 'nokogiri'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec', '~> 2.14'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3'
