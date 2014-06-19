@@ -1,10 +1,12 @@
+require 'active_support/descendants_tracker'
+require 'schematic/generator/column'
+require 'schematic/generator/column_validator'
+
 module Schematic
   module Generator
     module Restrictions
       class Base < Schematic::Generator::ColumnValidator
-        def self.inherited(klass)
-          Schematic::Generator::Column.restriction_classes << klass unless Schematic::Generator::Column.restriction_classes.include?(klass)
-        end
+        extend ActiveSupport::DescendantsTracker
       end
     end
   end

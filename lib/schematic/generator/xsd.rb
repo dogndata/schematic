@@ -1,3 +1,9 @@
+require 'schematic/generator/column'
+require 'schematic/generator/names'
+require 'schematic/generator/namespaces'
+require 'schematic/generator/types'
+require 'schematic/generator/uniqueness'
+
 module Schematic
   module Generator
     class Xsd

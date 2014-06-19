@@ -1,3 +1,6 @@
+require 'active_model/validations/format'
+require 'schematic/generator/restrictions/base'
+
 module Schematic
   module Generator
     module Restrictions

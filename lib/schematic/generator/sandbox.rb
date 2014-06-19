@@ -1,3 +1,6 @@
+require 'builder'
+require 'schematic/generator/xsd'
+
 module Schematic
   module Generator
     class Sandbox

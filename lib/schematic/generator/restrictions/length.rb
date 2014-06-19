@@ -1,3 +1,5 @@
+require 'schematic/generator/restrictions/base'
+
 module Schematic
   module Generator
     module Restrictions

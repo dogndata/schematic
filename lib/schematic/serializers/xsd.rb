@@ -1,3 +1,5 @@
+require 'schematic/generator/sandbox'
+
 module Schematic
   module Serializers
     module Xsd

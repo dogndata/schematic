@@ -1,11 +1,17 @@
+require 'active_model/validations/presence'
+require 'schematic/generator/restrictions/custom'
+require 'schematic/generator/restrictions/enumeration'
+require 'schematic/generator/restrictions/length'
+require 'schematic/generator/restrictions/numericality'
+require 'schematic/generator/restrictions/pattern'
+
 module Schematic
   module Generator
     class Column
       attr_accessor :restriction_classes
-      class << self
-        def restriction_classes
-          @restriction_classes ||= [Restrictions::Length, Restrictions::Enumeration, Restrictions::Numericality, Restrictions::Pattern, Restrictions::Custom]
-        end
+
+      def self.restriction_classes
+        Restrictions::Base.descendants.freeze
       end
 
       def initialize(klass, column, additional_methods = {}, ignored_methods = {}, required_methods = [], non_required_methods = [])

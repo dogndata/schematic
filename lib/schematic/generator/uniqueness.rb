@@ -1,3 +1,6 @@
+require 'active_record/validations/uniqueness'
+require 'schematic/generator/column_validator'
+
 module Schematic
   module Generator
     class Uniqueness < ColumnValidator
