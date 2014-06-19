@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
   describe ".to_xsd" do
@@ -7,7 +7,7 @@ describe Schematic::Serializers::Xsd do
       context "when allow blank is true" do
         with_model :some_model do
           table :id => false do |t|
-            t.string "title"
+            t.string 'title'
           end
 
           model do
@@ -37,7 +37,7 @@ describe Schematic::Serializers::Xsd do
       context "when allow blank is false" do
         with_model :some_model do
           table :id => false do |t|
-            t.string "title"
+            t.string 'title'
           end
 
           model do
@@ -67,8 +67,8 @@ describe Schematic::Serializers::Xsd do
       context "when there is a condition" do
         with_model :some_model do
           table :id => false do |t|
-            t.string "title"
-            t.string "description"
+            t.string 'title'
+            t.string 'description'
           end
 
           model do
@@ -110,7 +110,7 @@ describe Schematic::Serializers::Xsd do
       context "when allow blank is true" do
         with_model :some_model do
           table :id => false do |t|
-            t.boolean "current"
+            t.boolean 'current'
           end
 
           model do

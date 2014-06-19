@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Restrictions::Length do
   describe ".to_xsd" do
@@ -6,7 +6,7 @@ describe Schematic::Generator::Restrictions::Length do
       subject { sanitize_xml(LengthModelRange.to_xsd) }
       with_model :length_model_range do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
 
         model do
@@ -16,12 +16,12 @@ describe Schematic::Generator::Restrictions::Length do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = LengthModelRange.new(:title => "A" * 9)
+        invalid_instance = LengthModelRange.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        invalid_instance = LengthModelRange.new(:title => "A" * 21)
+        invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -43,12 +43,12 @@ describe Schematic::Generator::Restrictions::Length do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = LengthModelRange.new(:title => "A" * 9)
+        invalid_instance = LengthModelRange.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        invalid_instance = LengthModelRange.new(:title => "A" * 21)
+        invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -60,7 +60,7 @@ describe Schematic::Generator::Restrictions::Length do
       subject { sanitize_xml(LengthModelMinimum.to_xsd) }
       with_model :length_model_minimum do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
 
         model do
@@ -70,7 +70,7 @@ describe Schematic::Generator::Restrictions::Length do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = LengthModelMinimum.new(:title => "A" * 9)
+        invalid_instance = LengthModelMinimum.new(:title => 'A' * 9)
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -83,7 +83,7 @@ describe Schematic::Generator::Restrictions::Length do
       context "when allow blank is true" do
         with_model :length_model_one do
           table :id => false do |t|
-            t.string "title"
+            t.string 'title'
           end
 
           model do
@@ -93,7 +93,7 @@ describe Schematic::Generator::Restrictions::Length do
         end
 
         it "should validate against it's own XSD" do
-          invalid_instance = LengthModelOne.new(:title => "A" * 201)
+          invalid_instance = LengthModelOne.new(:title => 'A' * 201)
           xml = [invalid_instance].to_xml
           lambda {
             validate_xml_against_xsd(xml, subject)
@@ -123,7 +123,7 @@ describe Schematic::Generator::Restrictions::Length do
         subject { sanitize_xml(LengthModelTwo.to_xsd) }
         with_model :length_model_two do
           table :id => false do |t|
-            t.string "title"
+            t.string 'title'
           end
 
           model do
@@ -155,7 +155,7 @@ describe Schematic::Generator::Restrictions::Length do
         subject { sanitize_xml(LengthModelThree.to_xsd) }
         with_model :length_model_three do
           table :id => false do |t|
-            t.string "title"
+            t.string 'title'
           end
 
           model do

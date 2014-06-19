@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
   describe "Adding additional methods" do
@@ -165,12 +165,12 @@ describe Schematic::Serializers::Xsd do
       it "should validate against the xsd" do
         xsd = SomeModel.to_xsd
 
-        invalid_instance = SomeModel.new(:bar => "invalid option")
+        invalid_instance = SomeModel.new(:bar => 'invalid option')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, xsd)
         }.should raise_error
-        valid_instance = SomeModel.new(:bar => "b")
+        valid_instance = SomeModel.new(:bar => 'b')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, xsd)
@@ -196,7 +196,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           def self.xsd_foo_enumeration_restrictions
-            ["1", "2", "3"]
+            ['1', '2', '3']
           end
 
           schematic do
@@ -244,13 +244,13 @@ describe Schematic::Serializers::Xsd do
       end
 
       it "should validate against its own XSD" do
-        invalid_instance = SomeModel.new(:foo => ["a", "b"])
+        invalid_instance = SomeModel.new(:foo => ['a', 'b'])
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, SomeModel.to_xsd)
         }.should raise_error
 
-        instance = SomeModel.new(:foo => ["1", "2"])
+        instance = SomeModel.new(:foo => ['1', '2'])
         xml = [instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, SomeModel.to_xsd)

@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
   before do
@@ -41,14 +41,14 @@ describe Schematic::Serializers::Xsd do
 
         it "should validate against it's own XSD" do
           invalid_instance = SomeClass.new
-          invalid_instance.attributes = { "bar" => "foo" }
+          invalid_instance.attributes = { 'bar' => 'foo' }
           xml = [invalid_instance].to_xml
           lambda {
             validate_xml_against_xsd(xml, subject)
           }.should raise_error
 
           instance = SomeClass.new
-          instance.attributes = { "foo" => "bar" }
+          instance.attributes = { 'foo' => 'bar' }
           xml = [instance].to_xml
           validate_xml_against_xsd(xml, subject)
         end
@@ -59,13 +59,13 @@ describe Schematic::Serializers::Xsd do
 
         with_model :some_model do
           table :id => false do |t|
-            t.string "some_string"
-            t.text "some_text"
-            t.float "some_float"
-            t.integer "some_integer"
-            t.datetime "some_datetime"
-            t.date "some_date"
-            t.boolean "some_boolean"
+            t.string 'some_string'
+            t.text 'some_text'
+            t.float 'some_float'
+            t.integer 'some_integer'
+            t.datetime 'some_datetime'
+            t.date 'some_date'
+            t.boolean 'some_boolean'
             t.text "method_is_also_columns"
           end
 
@@ -95,14 +95,14 @@ describe Schematic::Serializers::Xsd do
         end
 
         it "should validate against it's own XSD" do
-          instance = SomeModel.new(:some_string => "ExampleString",
+          instance = SomeModel.new(:some_string => 'ExampleString',
                                    :some_date => Date.today,
-                                   :some_text => "here is some text",
+                                   :some_text => 'here is some text',
                                    :some_datetime => DateTime.new,
                                    :some_boolean => true,
                                    :some_float => 1.5,
-                                   :method_is_also_columns => ["somevalues"],
-                                   :additional_method_array => {"somevalue" => "somekey"},
+                                   :method_is_also_columns => ['somevalues'],
+                                   :additional_method_array => {'somevalue' => 'somekey'},
                                    :some_integer => 2)
           xml = [instance].to_xml
           validate_xml_against_xsd(xml, subject)
@@ -118,7 +118,7 @@ describe Schematic::Serializers::Xsd do
 
         with_model :some_model do
           table do |t|
-            t.string "some_string"
+            t.string 'some_string'
           end
 
           model do
@@ -160,7 +160,7 @@ describe Schematic::Serializers::Xsd do
             accepts_nested_attributes_for :parent
           end
           ::Parent.class_eval do
-            has_many :children, :class_name => "Namespace::SubChild"
+            has_many :children, :class_name => 'Namespace::SubChild'
             accepts_nested_attributes_for :children
           end
         end
@@ -181,7 +181,7 @@ describe Schematic::Serializers::Xsd do
       context "when the model has a nested attribute on a subclass with a different class name than the has_many association" do
         with_model :parent2 do
           model do
-            has_many :children, :class_name => "SpecialChild"
+            has_many :children, :class_name => 'SpecialChild'
             accepts_nested_attributes_for :children
           end
         end
@@ -199,8 +199,8 @@ describe Schematic::Serializers::Xsd do
         subject { Parent2.to_xsd }
 
         it "should generate a valid XSD" do
-          subject.should include "children-attributes"
-          subject.should_not include "special-children-attributes"
+          subject.should include 'children-attributes'
+          subject.should_not include 'special-children-attributes'
           validate_xsd(subject)
         end
       end
@@ -226,9 +226,9 @@ describe Schematic::Serializers::Xsd do
         subject { Car.to_xsd }
 
         it "should generate a valid XSD" do
-          subject.should include "engine-attributes"
-          subject.should_not include "engines-attributes"
-          subject.should_not include "Engines"
+          subject.should include 'engine-attributes'
+          subject.should_not include 'engines-attributes'
+          subject.should_not include 'Engines'
           validate_xsd(subject)
         end
       end
@@ -257,7 +257,7 @@ describe Schematic::Serializers::Xsd do
         subject { Car.to_xsd }
 
         it "should generate a valid XSD" do
-          subject.should_not include "engine-attributes"
+          subject.should_not include 'engine-attributes'
           validate_xsd(subject)
         end
       end
@@ -289,9 +289,9 @@ describe Schematic::Serializers::Xsd do
           subject { Parent.to_xsd }
 
           it "should be valid" do
-            subject.should include "child-attributes"
-            subject.should include "first-name"
-            subject.should_not include "last-name"
+            subject.should include 'child-attributes'
+            subject.should include 'first-name'
+            subject.should_not include 'last-name'
             validate_xsd(subject)
           end
         end
@@ -300,8 +300,8 @@ describe Schematic::Serializers::Xsd do
           subject { Child.to_xsd }
 
           it "should be valid" do
-            subject.should include "first-name"
-            subject.should include "last-name"
+            subject.should include 'first-name'
+            subject.should include 'last-name'
             validate_xsd(subject)
           end
         end
@@ -339,9 +339,9 @@ describe Schematic::Serializers::Xsd do
           subject { Parent.to_xsd }
 
           it "should be valid" do
-            subject.should include "child-attributes"
-            subject.should include "first-name"
-            subject.should include "last-name"
+            subject.should include 'child-attributes'
+            subject.should include 'first-name'
+            subject.should include 'last-name'
             validate_xsd(subject)
           end
         end
@@ -350,8 +350,8 @@ describe Schematic::Serializers::Xsd do
           subject { Child.to_xsd }
 
           it "should be valid" do
-            subject.should include "first-name"
-            subject.should include "last-name"
+            subject.should include 'first-name'
+            subject.should include 'last-name'
             validate_xsd(subject)
           end
         end
@@ -383,9 +383,9 @@ describe Schematic::Serializers::Xsd do
         describe "the parent XSD" do
           subject { Person.to_xsd }
           it "should be valid" do
-            subject.should include %{"house-attributes"}
-            subject.should include %{"price"}
-            subject.should_not include %{"address"}
+            subject.should include %q{"house-attributes"}
+            subject.should include %q{"price"}
+            subject.should_not include %q{"address"}
             validate_xsd(subject)
           end
         end
@@ -393,8 +393,8 @@ describe Schematic::Serializers::Xsd do
         describe "the child XSD" do
           subject { House.to_xsd }
           it "should be valid" do
-            subject.should include %{"price"}
-            subject.should include %{"address"}
+            subject.should include %q{"price"}
+            subject.should include %q{"address"}
             validate_xsd(subject)
           end
         end
@@ -413,7 +413,7 @@ describe Schematic::Serializers::Xsd do
           end
 
           model do
-            belongs_to :university, class_name: "School"
+            belongs_to :university, class_name: 'School'
 
             accepts_nested_attributes_for :university
           end
@@ -474,9 +474,9 @@ describe Schematic::Serializers::Xsd do
         describe "the parent XSD" do
           subject { Person.to_xsd }
           it "should be valid" do
-            subject.should include %{"house-attributes"}
-            subject.should include %{"price"}
-            subject.should_not include %{"address"}
+            subject.should include %q{"house-attributes"}
+            subject.should include %q{"price"}
+            subject.should_not include %q{"address"}
             validate_xsd(subject)
           end
         end
@@ -484,8 +484,8 @@ describe Schematic::Serializers::Xsd do
         describe "the child XSD" do
           subject { House.to_xsd }
           it "should be valid" do
-            subject.should include %{"price"}
-            subject.should include %{"address"}
+            subject.should include %q{"price"}
+            subject.should include %q{"address"}
             validate_xsd(subject)
           end
         end
@@ -709,7 +709,7 @@ describe Schematic::Serializers::Xsd do
       with_model :ModelWithDifferentRoot do
         model do
           schematic do
-            root "my_root"
+            root 'my_root'
           end
         end
       end
@@ -717,10 +717,10 @@ describe Schematic::Serializers::Xsd do
       subject { ModelWithDifferentRoot.to_xsd }
 
       it "should use the new root tag name" do
-        subject.should_not include %{"model-with-different-root"}
-        subject.should_not include %{"model-with-different-roots"}
-        subject.should include %{"my-root"}
-        subject.should include %{"my-roots"}
+        subject.should_not include %q{"model-with-different-root"}
+        subject.should_not include %q{"model-with-different-roots"}
+        subject.should include %q{"my-root"}
+        subject.should include %q{"my-roots"}
         validate_xsd(subject)
       end
     end
@@ -730,26 +730,26 @@ describe Schematic::Serializers::Xsd do
   describe "#nested_attribute_name" do
     let(:xsd) {Schematic::Generator::Xsd.new(Object)}
     it "turns 'child' into 'children-attributes'" do
-      xsd.nested_attribute_name('child').should == "children-attributes"
+      xsd.nested_attribute_name('child').should == 'children-attributes'
     end
 
     it "turns 'children' into 'children-attributes'" do
-      xsd.nested_attribute_name('children').should == "children-attributes"
+      xsd.nested_attribute_name('children').should == 'children-attributes'
     end
 
     it "turns 'special-children' into 'special-children-attributes'" do
-      xsd.nested_attribute_name("special_children").should == "special-children-attributes"
+      xsd.nested_attribute_name('special_children').should == 'special-children-attributes'
     end
 
     it "properly converts symbols" do
-      xsd.nested_attribute_name(:very_special_children).should == "very-special-children-attributes"
+      xsd.nested_attribute_name(:very_special_children).should == 'very-special-children-attributes'
     end
   end
   context "when the model has a nested attribute with a different class name and foreign key than the has_many association" do
     with_model :foo do
       model do
-        has_one :bar, :class_name => "Quz", :foreign_key => "bar_id"
-        has_many :children, :class_name => "Quz", :foreign_key => "children_id"
+        has_one :bar, :class_name => 'Quz', :foreign_key => 'bar_id'
+        has_many :children, :class_name => 'Quz', :foreign_key => 'children_id'
         accepts_nested_attributes_for :children
         accepts_nested_attributes_for :bar
       end
@@ -777,8 +777,8 @@ describe Schematic::Serializers::Xsd do
       </foos>
       END
 
-      subject.should include "Quz"
-      subject.should include "Quzs"
+      subject.should include 'Quz'
+      subject.should include 'Quzs'
       validate_xml_against_xsd(test_xml, subject)
     end
   end

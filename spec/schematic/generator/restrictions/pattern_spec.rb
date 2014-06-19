@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Restrictions::Pattern do
   describe ".to_xsd" do
@@ -16,12 +16,12 @@ describe Schematic::Generator::Restrictions::Pattern do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = PatternModel.new(:title => "1-2")
+        invalid_instance = PatternModel.new(:title => '1-2')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = PatternModel.new(:title => "a#5")
+        valid_instance = PatternModel.new(:title => 'a#5')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -63,17 +63,17 @@ describe Schematic::Generator::Restrictions::Pattern do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = PatternModel.new(:email => "@blah")
+        invalid_instance = PatternModel.new(:email => '@blah')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        invalid_instance = PatternModel.new(:money => "whatever")
+        invalid_instance = PatternModel.new(:money => 'whatever')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = PatternModel.new(:email => "foo@bar.com", :money => "$99.95")
+        valid_instance = PatternModel.new(:email => 'foo@bar.com', :money => '$99.95')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)

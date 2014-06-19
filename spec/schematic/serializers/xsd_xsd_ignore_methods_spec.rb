@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
   describe "schematic#ignore keyword" do

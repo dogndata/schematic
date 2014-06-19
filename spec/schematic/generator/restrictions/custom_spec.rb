@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Restrictions::Enumeration do
   describe ".to_xsd" do
@@ -6,7 +6,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
       before do
         class CrazyTownValidator < ActiveModel::EachValidator
           def validate_each(record, attribute, value)
-            record.errors.add(attribute, "must be crazy") unless value.match /.*crazy.*|\w/
+            record.errors.add(attribute, 'must be crazy') unless value.match /.*crazy.*|\w/
           end
 
           def xsd_pattern_restrictions
@@ -18,7 +18,7 @@ describe Schematic::Generator::Restrictions::Enumeration do
       subject { sanitize_xml(CustomModel.to_xsd) }
       with_model :custom_model do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
 
         model do
@@ -28,17 +28,17 @@ describe Schematic::Generator::Restrictions::Enumeration do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = CustomModel.new(:title => "happy today")
+        invalid_instance = CustomModel.new(:title => 'happy today')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        invalid_instance = CustomModel.new(:title => "happytoday")
+        invalid_instance = CustomModel.new(:title => 'happytoday')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = CustomModel.new(:title => "iamcrazytoday")
+        valid_instance = CustomModel.new(:title => 'iamcrazytoday')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)

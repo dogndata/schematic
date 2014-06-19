@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
 
@@ -9,7 +9,7 @@ describe Schematic::Serializers::Xsd do
     context "given a column with no validations" do
       with_model :some_model do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
 
         model do
@@ -23,7 +23,7 @@ describe Schematic::Serializers::Xsd do
     context "given a column with presence of but allow blank" do
       with_model :some_model do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
         model do
           self.primary_key = :title
@@ -37,7 +37,7 @@ describe Schematic::Serializers::Xsd do
     context "given a column with presence of and no allow blank" do
       with_model :some_model do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
         model do
           self.primary_key = :title

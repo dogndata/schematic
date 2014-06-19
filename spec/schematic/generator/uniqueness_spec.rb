@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Uniqueness do
   describe ".to_xsd" do
@@ -6,7 +6,7 @@ describe Schematic::Generator::Uniqueness do
       subject { sanitize_xml(TestModel.to_xsd) }
       with_model :test_model do
         table :id => false do |t|
-          t.string "some_field"
+          t.string 'some_field'
         end
 
         model do
@@ -16,9 +16,9 @@ describe Schematic::Generator::Uniqueness do
       end
 
       it "should validate against it's own XSD" do
-        first_instance = TestModel.new(:some_field => "first")
-        another_instance = TestModel.new(:some_field => "second")
-        duplicate_instance = TestModel.new(:some_field => "first")
+        first_instance = TestModel.new(:some_field => 'first')
+        another_instance = TestModel.new(:some_field => 'second')
+        duplicate_instance = TestModel.new(:some_field => 'first')
         xml = [first_instance, duplicate_instance, another_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
@@ -58,9 +58,9 @@ describe Schematic::Generator::Uniqueness do
 
       shared_examples_for "single field in scope" do
         it "should validate against it's own XSD" do
-          first_instance = TestModel.new(:some_field => "first", :other_field => "unique")
-          another_instance = TestModel.new(:some_field => "first", :other_field => "alsounique")
-          duplicate_instance = TestModel.new(:some_field => "first", :other_field => "unique")
+          first_instance = TestModel.new(:some_field => 'first', :other_field => 'unique')
+          another_instance = TestModel.new(:some_field => 'first', :other_field => 'alsounique')
+          duplicate_instance = TestModel.new(:some_field => 'first', :other_field => 'unique')
           xml = [first_instance, duplicate_instance, another_instance].to_xml
           lambda {
             validate_xml_against_xsd(xml, subject)
@@ -75,8 +75,8 @@ describe Schematic::Generator::Uniqueness do
       context "when the scope is a symbol" do
         with_model :test_model do
           table :id => false do |t|
-            t.string "some_field"
-            t.string "other_field"
+            t.string 'some_field'
+            t.string 'other_field'
           end
 
           model do
@@ -91,8 +91,8 @@ describe Schematic::Generator::Uniqueness do
       context "when the scope is an array" do
         with_model :test_model do
           table :id => false do |t|
-            t.string "some_field"
-            t.string "other_field"
+            t.string 'some_field'
+            t.string 'other_field'
           end
 
           model do
@@ -109,8 +109,8 @@ describe Schematic::Generator::Uniqueness do
       subject { sanitize_xml(TestModel.to_xsd) }
       with_model :test_model do
         table :id => false do |t|
-          t.string "some_field"
-          t.string "other_field"
+          t.string 'some_field'
+          t.string 'other_field'
         end
 
         model do
@@ -121,10 +121,10 @@ describe Schematic::Generator::Uniqueness do
       end
 
       it "should validate against it's own XSD" do
-        first_instance = TestModel.new(:some_field => "first", :other_field => "unique")
-        another_instance = TestModel.new(:some_field => "another", :other_field => "alsounique")
-        duplicate_instance = TestModel.new(:some_field => "first", :other_field => "duplicate")
-        other_duplicate_instance = TestModel.new(:some_field => "fourth", :other_field => "unique")
+        first_instance = TestModel.new(:some_field => 'first', :other_field => 'unique')
+        another_instance = TestModel.new(:some_field => 'another', :other_field => 'alsounique')
+        duplicate_instance = TestModel.new(:some_field => 'first', :other_field => 'duplicate')
+        other_duplicate_instance = TestModel.new(:some_field => 'fourth', :other_field => 'unique')
 
         xml = [first_instance, duplicate_instance, another_instance].to_xml
         lambda {

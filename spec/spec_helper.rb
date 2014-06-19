@@ -1,17 +1,17 @@
-require "active_record"
-require "with_model"
-require "nokogiri"
-require "schematic"
+require 'active_record'
+require 'with_model'
+require 'nokogiri'
+require 'schematic'
 
 RSpec.configure do |config|
   config.extend WithModel
 end
 
-ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ":memory:")
+ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 
 def validate_xml_against_xsd(xml, xsd)
-  require "tempfile"
-  tempfile = Tempfile.new("schematic")
+  require 'tempfile'
+  tempfile = Tempfile.new('schematic')
   tempfile << xsd
   tempfile.rewind
   xsd =  Nokogiri::XML::Schema(tempfile)
@@ -26,7 +26,7 @@ ensure
 end
 
 def validate_xsd(xml)
-  xsd_schema_file = File.join(File.dirname(__FILE__), "xsd", "XMLSchema.xsd")
+  xsd_schema_file = File.join(File.dirname(__FILE__), 'xsd', 'XMLSchema.xsd')
   meta_xsd = Nokogiri::XML::Schema(File.open(xsd_schema_file))
 
   doc = Nokogiri::XML.parse(xml)

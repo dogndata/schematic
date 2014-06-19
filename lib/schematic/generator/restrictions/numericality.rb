@@ -4,7 +4,7 @@ module Schematic
       class Numericality < Base
         def generate(builder)
           for_validator ActiveModel::Validations::NumericalityValidator do |validator|
-            builder.xs(:pattern, "value" => "\\d+")
+            builder.xs(:pattern, 'value' => '\d+')
           end
         end
       end

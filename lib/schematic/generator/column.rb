@@ -21,16 +21,16 @@ module Schematic
         return if skip_generation?
 
         options = {
-          "name" => @column.name.dasherize,
-          "minOccurs" => minimum_occurrences_for_column.to_s,
-          "maxOccurs" => "1"
+          'name' => @column.name.dasherize,
+          'minOccurs' => minimum_occurrences_for_column.to_s,
+          'maxOccurs' => '1'
         }
-        options.merge!({"nillable" => "false"}) if minimum_occurrences_for_column > 0
+        options.merge!({'nillable' => 'false'}) if minimum_occurrences_for_column > 0
 
         builder.xs :element, options do |field|
           field.xs :complexType do |complex_type|
             complex_type.xs :simpleContent do |simple_content|
-              simple_content.xs :restriction, "base" => map_type(@column) do |restriction|
+              simple_content.xs :restriction, 'base' => map_type(@column) do |restriction|
                 self.class.restriction_classes.each do |restriction_class|
                   restriction_class.new(@klass, @column).generate(restriction)
                 end

@@ -21,7 +21,7 @@ module Schematic
       end
 
       def schema(builder)
-        builder.xs :schema, ns("xs", :w3, :schema) do |schema|
+        builder.xs :schema, ns('xs', :w3, :schema) do |schema|
           Types.xsd(schema)
           element_for_klass(schema)
           generate(schema, @klass)
@@ -29,7 +29,7 @@ module Schematic
       end
 
       def element_for_klass(builder)
-        builder.xs :element, "name" => @names.element_collection, "type" => @names.collection_type do |element|
+        builder.xs :element, 'name' => @names.element_collection, 'type' => @names.collection_type do |element|
           generate_uniqueness_constraints(element)
         end
       end
@@ -65,16 +65,16 @@ module Schematic
       end
 
       def generate_complex_type_for_collection(builder)
-        builder.xs :complexType, "name" => @names.collection_type do |complex_type|
+        builder.xs :complexType, 'name' => @names.collection_type do |complex_type|
           complex_type.xs :sequence do |sequence|
-            sequence.xs :element, "name" => @names.element, "type" => @names.type, "minOccurs" => "0", "maxOccurs" => "unbounded"
+            sequence.xs :element, 'name' => @names.element, 'type' => @names.type, 'minOccurs' => '0', 'maxOccurs' => 'unbounded'
           end
-          complex_type.xs :attribute, "name" => "type", "type" => "xs:string", "fixed" => "array"
+          complex_type.xs :attribute, 'name' => 'type', 'type' => 'xs:string', 'fixed' => 'array'
         end
       end
 
       def generate_complex_type_for_model(builder)
-        builder.xs :complexType, "name" => @names.type do |complex_type|
+        builder.xs :complexType, 'name' => @names.type do |complex_type|
           additional_methods = @klass.schematic_sandbox.added_elements.merge(@options[:methods] || {})
           ignored_methods = @klass.schematic_sandbox.ignored_elements.dup
           exclude = @exclude
@@ -98,22 +98,22 @@ module Schematic
               case nested_attribute.macro
               when :has_many
                 all.xs :element,
-                  "name" => nested_attribute_name(nested_attribute.name),
-                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.collection_type,
-                  "minOccurs" => "0",
-                  "maxOccurs" => "1"
+                  'name' => nested_attribute_name(nested_attribute.name),
+                  'type' => nested_attribute.klass.schematic_sandbox.xsd_generator.names.collection_type,
+                  'minOccurs' => '0',
+                  'maxOccurs' => '1'
               when :has_one
                 all.xs :element,
-                  "name" => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
-                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
-                  "minOccurs" => "0",
-                  "maxOccurs" => "1"
+                  'name' => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
+                  'type' => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
+                  'minOccurs' => '0',
+                  'maxOccurs' => '1'
               when :belongs_to
                 all.xs :element,
-                  "name" => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
-                  "type" => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
-                  "minOccurs" => "0",
-                  "maxOccurs" => "1"
+                  'name' => nested_attribute_name(nested_attribute.name, {:pluralized => false}),
+                  'type' => nested_attribute.klass.schematic_sandbox.xsd_generator.names.type,
+                  'minOccurs' => '0',
+                  'maxOccurs' => '1'
               end
             end
 
@@ -140,10 +140,10 @@ module Schematic
         enumeration_method = "xsd_#{value}_enumeration_restrictions".to_sym
         builder.xs :complexType do |complex_type|
           complex_type.xs :simpleContent do |simple_content|
-            simple_content.xs :restriction, "base" => "String" do |restriction|
+            simple_content.xs :restriction, 'base' => 'String' do |restriction|
               if @klass.respond_to? enumeration_method
                 @klass.send(enumeration_method).each do |enumeration|
-                  restriction.xs :enumeration, "value" => enumeration
+                  restriction.xs :enumeration, 'value' => enumeration
                 end
               end
             end
@@ -155,18 +155,18 @@ module Schematic
         additional_methods.each do |method_name, values|
           method_xsd_name = method_name.to_s.dasherize
           if values.is_a?(Array) || values.is_a?(Hash)
-            builder.xs :element, "name" => method_xsd_name, "minOccurs" => "0", "maxOccurs" => "1" do |element|
+            builder.xs :element, 'name' => method_xsd_name, 'minOccurs' => '0', 'maxOccurs' => '1' do |element|
               element.xs :complexType do |complex_type|
                 if values.is_a?(Array)
                   complex_type.xs :sequence do |nested_sequence|
                     if values.present?
                       values.each do |value|
-                        nested_sequence.xs :element, "name" => value.to_s.dasherize, "minOccurs" => "0", "maxOccurs" => "unbounded" do |sequence_element|
+                        nested_sequence.xs :element, 'name' => value.to_s.dasherize, 'minOccurs' => '0', 'maxOccurs' => 'unbounded' do |sequence_element|
                           generate_inclusion_value_restrictions(sequence_element, value)
                         end
                       end
                     else
-                      nested_sequence.xs :any, "processContents" => "skip", "minOccurs" => "0", "maxOccurs" => "unbounded"
+                      nested_sequence.xs :any, 'processContents' => 'skip', 'minOccurs' => '0', 'maxOccurs' => 'unbounded'
                     end
                   end
                 elsif values.is_a?(Hash)
@@ -174,9 +174,9 @@ module Schematic
                     generate_additional_methods(nested_all, values)
                   end
                 else
-                  raise "Additional methods must be a hash of hashes or hash of arrays"
+                  raise 'Additional methods must be a hash of hashes or hash of arrays'
                 end
-                complex_type.xs :attribute, "name" => "type", "type" => "xs:string", "fixed" => "array", "use" => "optional"
+                complex_type.xs :attribute, 'name' => 'type', 'type' => 'xs:string', 'fixed' => 'array', 'use' => 'optional'
               end
             end
           else
@@ -203,7 +203,7 @@ module Schematic
       def nested_attribute_name(name, options={})
         pluralized = options.delete(:pluralized)
         pluralized = true if pluralized.nil?
-        name = name.to_s.gsub("_", "-")
+        name = name.to_s.gsub('_', '-')
         name = name.pluralize if pluralized
         "#{name}-attributes"
       end

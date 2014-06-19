@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Sandbox do
   subject { Schematic::Generator::Sandbox.new(klass) }
@@ -98,11 +98,11 @@ describe Schematic::Generator::Sandbox do
   describe "setting the root" do
     it "should change the root element name" do
       subject.run do
-        root "my_new_root"
+        root 'my_new_root'
       end
 
-      subject.xsd_generator.names.element.should == "my-new-root"
-      subject.xsd_generator.names.element_collection.should == "my-new-roots"
+      subject.xsd_generator.names.element.should == 'my-new-root'
+      subject.xsd_generator.names.element_collection.should == 'my-new-roots'
     end
   end
 end

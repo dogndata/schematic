@@ -20,7 +20,7 @@ module Schematic
       end
 
       def to_xsd(options = {})
-        output = ""
+        output = ''
         builder = Builder::XmlMarkup.new(:target => output, :indent => 2)
         xsd_generator.options = options
         xsd_generator.header(builder)

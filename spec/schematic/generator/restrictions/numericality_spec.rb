@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Schematic::Generator::Restrictions::Numericality do
   describe ".to_xsd" do
@@ -6,7 +6,7 @@ describe Schematic::Generator::Restrictions::Numericality do
       subject { sanitize_xml(TestModel.to_xsd) }
       with_model :test_model do
         table :id => false do |t|
-          t.string "some_field"
+          t.string 'some_field'
         end
 
         model do
@@ -16,12 +16,12 @@ describe Schematic::Generator::Restrictions::Numericality do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = TestModel.new(:some_field => "1a2")
+        invalid_instance = TestModel.new(:some_field => '1a2')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = TestModel.new(:some_field => "123")
+        valid_instance = TestModel.new(:some_field => '123')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)

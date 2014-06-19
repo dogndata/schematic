@@ -10,7 +10,7 @@ module Schematic
               value.gsub!(/(?:\$|\\Z|\\z)?$/, '')
               value.gsub!(/\\\$/, '$')
               value.gsub!(/\(\?:/, '(')
-              builder.xs(:pattern, "value" => value)
+              builder.xs(:pattern, 'value' => value)
             end
           end
         end

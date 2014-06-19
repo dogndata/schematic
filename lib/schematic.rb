@@ -1,13 +1,13 @@
 module Schematic
   class ClassMissingXmlSerializer < Exception
     def message
-      "This class does not include ActiveModel::Serializers::Xml. You cannot generate an XSD from it."
+      'This class does not include ActiveModel::Serializers::Xml. You cannot generate an XSD from it.'
     end
   end
 
   class ClassMissingAttributes < Exception
     def message
-      "This class does not implement #attributes. You cannot generate an XSD from it."
+      'This class does not implement #attributes. You cannot generate an XSD from it.'
     end
   end
 
@@ -37,7 +37,7 @@ module Schematic
   autoload :Version, 'schematic/version'
 end
 
-require "builder"
+require 'builder'
 require 'active_support/inflector/inflections'
 require 'active_support/inflections'
 

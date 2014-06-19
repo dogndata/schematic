@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe "Schematic::Generator::Restrictions::Mixin" do
   describe ".to_xsd" do
@@ -7,7 +7,7 @@ describe "Schematic::Generator::Restrictions::Mixin" do
         class MixedInRestriction < Schematic::Generator::Restrictions::Base
           def generate(builder)
             for_validator ActiveModel::BlockValidator do |validator|
-              builder.xs(:enumeration, "value" => "cheese")
+              builder.xs(:enumeration, 'value' => 'cheese')
             end
           end
         end
@@ -16,7 +16,7 @@ describe "Schematic::Generator::Restrictions::Mixin" do
       subject { sanitize_xml(TestModel.to_xsd) }
       with_model :test_model do
         table :id => false do |t|
-          t.string "title"
+          t.string 'title'
         end
 
         model do
@@ -27,12 +27,12 @@ describe "Schematic::Generator::Restrictions::Mixin" do
       end
 
       it "should validate against it's own XSD" do
-        invalid_instance = TestModel.new(:title => "cake")
+        invalid_instance = TestModel.new(:title => 'cake')
         xml = [invalid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
         }.should raise_error
-        valid_instance = TestModel.new(:title => "cheese")
+        valid_instance = TestModel.new(:title => 'cheese')
         xml = [valid_instance].to_xml
         lambda {
           validate_xml_against_xsd(xml, subject)
