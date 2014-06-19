@@ -1,4 +1,5 @@
 require 'schematic/generator/sandbox'
+require 'schematic/exceptions'
 
 module Schematic
   module Serializers
