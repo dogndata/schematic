@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name        = 'schematic'
   spec.version     = Schematic::VERSION
   spec.authors     = ['Case Commons, LLC']
-  spec.email       = ['casecommons-dev@googlegroups.com']
+  spec.email       = ['casecommons-dev@googlegroups.com', 'andrew@johnandrewmarshall.com']
   spec.homepage    = 'https://github.com/Casecommons/schematic'
   spec.summary     = %q{Automatic XSD generation from ActiveRecord models}
   spec.description = spec.summary
