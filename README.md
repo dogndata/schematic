@@ -1,5 +1,6 @@
 # [Schematic](http://github.com/casecommons/schematic/)
 
+[![Code Climate](https://img.shields.io/codeclimate/github/Casecommons/schematic.svg)](https://codeclimate.com/github/Casecommons/schematic)
 [![Gem Version](https://badge.fury.io/rb/schematic.svg)](https://rubygems.org/gems/schematic)
 
 Automatic XSD generation for your ActiveRecord models.
