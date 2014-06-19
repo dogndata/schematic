@@ -48,4 +48,3 @@ describe Schematic::Generator::Restrictions::Numericality do
     end
   end
 end
-

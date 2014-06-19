@@ -59,8 +59,3 @@ describe "Schematic::Generator::Restrictions::Mixin" do
     end
   end
 end
-
-
-
-
-

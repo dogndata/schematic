@@ -184,4 +184,3 @@ describe Schematic::Generator::Restrictions::Length do
     end
   end
 end
-

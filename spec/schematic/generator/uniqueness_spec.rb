@@ -142,8 +142,5 @@ describe Schematic::Generator::Uniqueness do
         }.should_not raise_error
       end
     end
-
   end
 end
-
-

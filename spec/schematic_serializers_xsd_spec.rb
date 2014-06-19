@@ -31,7 +31,6 @@ describe Schematic::Serializers::Xsd do
             schematic do
               add :foo
             end
-
           end
         end
 
@@ -783,5 +782,3 @@ describe Schematic::Serializers::Xsd do
     end
   end
 end
-
-

@@ -48,5 +48,4 @@ describe Schematic::Serializers::Xsd do
       it { should == 1 }
     end
   end
-
 end

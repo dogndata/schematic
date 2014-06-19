@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Schematic::Serializers::Xsd do
-  with_model :empty_model do
-  end
+  with_model :empty_model
+
   before do
     class EmptyClass
       include ActiveModel::Serializers::Xml

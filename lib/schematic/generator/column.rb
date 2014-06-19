@@ -45,7 +45,7 @@ module Schematic
         return 1 if @required_methods.include?(@column.name.to_sym)
         return 0 unless @klass.respond_to?(:_validators)
         @klass._validators[@column.name.to_sym].each do |column_validation|
-          next unless column_validation.is_a?  ActiveModel::Validations::PresenceValidator
+          next unless column_validation.is_a? ActiveModel::Validations::PresenceValidator
           if column_validation.options[:allow_blank] != true &&
             column_validation.options[:if].nil? &&
             column_validation.options[:unless].nil?

@@ -16,4 +16,3 @@ module Schematic
     end
   end
 end
-

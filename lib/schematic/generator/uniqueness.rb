@@ -1,7 +1,6 @@
 module Schematic
   module Generator
     class Uniqueness < ColumnValidator
-
       def generate(builder)
         for_validator ActiveRecord::Validations::UniquenessValidator do |validator|
           unique_name = validator.attributes.first.to_s.dasherize
@@ -20,6 +19,3 @@ module Schematic
     end
   end
 end
-
-
-

@@ -66,7 +66,3 @@ describe Schematic::Generator::Restrictions::Enumeration do
     end
   end
 end
-
-
-
-

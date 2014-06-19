@@ -22,5 +22,4 @@ describe Schematic::Serializers::Xsd do
       sanitize_xml(SomeModel.to_xsd).should eq(xsd)
     end
   end
-
 end

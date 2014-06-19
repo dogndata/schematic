@@ -317,4 +317,3 @@ describe Schematic::Serializers::Xsd do
     end
   end
 end
-

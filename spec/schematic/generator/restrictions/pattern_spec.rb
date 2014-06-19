@@ -82,6 +82,3 @@ describe Schematic::Generator::Restrictions::Pattern do
     end
   end
 end
-
-
-
