@@ -1,5 +1,6 @@
 # [Schematic](http://github.com/casecommons/schematic/)
 
+[![Build Status](https://secure.travis-ci.org/Casecommons/schematic.svg?branch=master)](https://travis-ci.org/Casecommons/schematic)
 [![Code Climate](https://img.shields.io/codeclimate/github/Casecommons/schematic.svg)](https://codeclimate.com/github/Casecommons/schematic)
 [![Gem Version](https://badge.fury.io/rb/schematic.svg)](https://rubygems.org/gems/schematic)
 
@@ -7,7 +8,7 @@ Automatic XSD generation for your ActiveRecord models.
 
 ## Installation
 
-Install as usual: `gem install schematic` or add `gem 'schematic'` to your Gemfile
+Install as usual: `gem install schematic` or add `gem 'schematic'` to your Gemfile. See `.travis.yml` for supported (tested) Ruby versions.
 
 ## Usage
   
