@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'https://github.com/Casecommons/schematic'
   spec.summary     = %q{Automatic XSD generation from ActiveRecord models}
   spec.description = spec.summary
+  spec.license     = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
