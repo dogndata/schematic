@@ -1,22 +1,10 @@
 # [Schematic](http://github.com/casecommons/schematic/)
 
-## Description
+Automatic XSD generation for your ActiveRecord models.
 
-Automatic XSD generation for your ActiveRecord models
+## Installation
 
-## Install
-
-Add schematic to your Gemfile
-
-```ruby
-gem 'schematic'
-```
-
-Then run:
-
-```
-$ bundle install
-```
+Install as usual: `gem install schematic` or add `gem 'schematic'` to your Gemfile
 
 ## Usage
   
@@ -24,7 +12,7 @@ $ bundle install
 class Post < ActiveRecord::Base
 end
 
-Post.to_xsd => (a bunch of xml)
+Post.to_xsd #=> (a bunch of xml)
 ```
 
 Validations will automatically add restrictions to the XSD for fields. If a validation has a conditional if or unless option it will be skipped. However if you wish to force the inclusion of the validation in the XSD you can set: `{ :xsd => { :include => true } }` in the options e.g.
@@ -76,7 +64,7 @@ class MyCustomRestriction < Schematic::Generator::Restrictions::Base
 end
 ```
 
-You can have a custom pattern restriction from a custom validater:
+You can have a custom pattern restriction from a custom validator:
 
 ```ruby
 class MyValidator < ActiveModel::EachValidator
@@ -90,12 +78,12 @@ class MyValidator < ActiveModel::EachValidator
 end
 ```
 
-You can have a custom enumeration restriction from a custom validater:
+You can have a custom enumeration restriction from a custom validator:
 
 ```ruby
 class MyValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    ...
+    # ...
   end
 
   def xsd_field_enumeration_restrictions
@@ -110,4 +98,5 @@ end
 
 ## License
 
-MIT
+Copyright © 2010–2014 Case Commons, LLC.
+Licensed under the MIT license, available in the “LICENSE” file.
