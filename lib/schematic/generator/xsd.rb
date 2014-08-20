@@ -164,16 +164,12 @@ module Schematic
             builder.xs :element, 'name' => method_xsd_name, 'minOccurs' => '0', 'maxOccurs' => '1' do |element|
               element.xs :complexType do |complex_type|
                 if values.is_a?(Array)
-                  complex_type.xs :sequence do |nested_sequence|
-                    if values.present?
-                      values.each do |value|
-                        nested_sequence.xs :element, 'name' => value.to_s.dasherize, 'minOccurs' => '0', 'maxOccurs' => 'unbounded' do |sequence_element|
-                          generate_inclusion_value_restrictions(sequence_element, value)
-                        end
-                      end
-                    else
-                      nested_sequence.xs :any, 'processContents' => 'skip', 'minOccurs' => '0', 'maxOccurs' => 'unbounded'
+                  if values.any? { |item| item.is_a?(Hash) }
+                    complex_type.xs :sequence do |nested_complex_type|
+                      generate_unbounded_complex_type_element(nested_complex_type, values)
                     end
+                  else
+                    generate_sequence_of_simple_elements(complex_type, values)
                   end
                 elsif values.is_a?(Hash)
                   complex_type.xs :all do |nested_all|
@@ -189,6 +185,33 @@ module Schematic
             column_klass = Struct.new(:name, :type)
             column = column_klass.new(method_name.to_s, :string)
             Column.new(@klass, column, {}, @klass.schematic_sandbox.ignored_elements).generate(builder)
+          end
+        end
+      end
+
+      def generate_unbounded_complex_type_element(complex_type, values)
+        complex_type.xs :element, name: values.first.keys.first.to_s.dasherize, 'minOccurs' => '0', 'maxOccurs' => 'unbounded' do |element|
+          element.xs :complexType do |nested_complex_type|
+            nested_complex_type.xs :all do |nested_all|
+              nested_all.xs :element, name: values.first.values.first.keys.first.to_s.dasherize, 'minOccurs' => '0', 'maxOccurs' => '1' do |foo|
+                generate_inclusion_value_restrictions(foo, values.first.values.first.keys.first)
+              end
+            end
+            complex_type.xs :attribute, "name" => "type", "type" => "xs:string", "fixed" => "array", "use" => "optional"
+          end
+        end
+      end
+
+      def generate_sequence_of_simple_elements(complex_type, values)
+        complex_type.xs :sequence do |nested_sequence|
+          if values.present?
+            values.each do |value|
+              nested_sequence.xs :element, 'name' => value.to_s.dasherize, 'minOccurs' => '0', 'maxOccurs' => 'unbounded' do |sequence_element|
+                generate_inclusion_value_restrictions(sequence_element, value)
+              end
+            end
+          else
+            nested_sequence.xs :any, 'processContents' => 'skip', 'minOccurs' => '0', 'maxOccurs' => 'unbounded'
           end
         end
       end

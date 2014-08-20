@@ -315,5 +315,63 @@ describe Schematic::Serializers::Xsd do
         expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
       end
     end
+
+    context "given nested methods of a collection of complex types" do
+      with_model :some_model do
+        model do
+          schematic do
+            add :foo => [{ :bar => { :baz => nil } }]
+            add :quz
+          end
+        end
+      end
+
+      it "should nested the additional methods" do
+        xsd = generate_xsd_for_model(SomeModel) do
+          <<-XML
+        <xs:element name="id" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:restriction base="Integer">
+              </xs:restriction>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="foo" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="bar" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:all>
+                    <xs:element name="baz" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:restriction base="String">
+                          </xs:restriction>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:all>
+                  <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="type" type="xs:string" fixed="array" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="quz" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:restriction base="String">
+              </xs:restriction>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+          XML
+        end
+
+        expect(sanitize_xml(SomeModel.to_xsd)).to eq(xsd)
+      end
+    end
   end
 end

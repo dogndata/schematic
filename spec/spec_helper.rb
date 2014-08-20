@@ -11,5 +11,6 @@ end
 require 'support/database'
 require 'support/helpers'
 require 'support/with_model'
+require 'pry'
 
 require 'schematic'

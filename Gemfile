@@ -7,3 +7,10 @@ gem 'activerecord', :github => 'rails', :branch => ENV['ACTIVE_RECORD_BRANCH'] i
 gem 'activerecord', ENV['ACTIVE_RECORD_VERSION'] if ENV['ACTIVE_RECORD_VERSION']
 gem 'activerecord-jdbcsqlite3-adapter', :platforms => :jruby
 gem 'sqlite3', '1.3.8', :platforms => :ruby
+
+gem "pry"
+gem 'pry-byebug'
+gem 'pry-doc'
+gem 'pry-remote'
+gem 'pry-stack_explorer'
+gem 'pry-theme'

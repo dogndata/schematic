@@ -38,7 +38,7 @@ describe Schematic::Serializers::Xsd do
           validate_xsd(subject)
         end
 
-        it "should validate against it's own XSD" do
+        it "should validate against its own XSD" do
           invalid_instance = SomeClass.new
           invalid_instance.attributes = { 'bar' => 'foo' }
           xml = [invalid_instance].to_xml
@@ -144,7 +144,6 @@ describe Schematic::Serializers::Xsd do
         end
         with_model :parent do
         end
-
 
         before do
           ::Child.class_eval do
