@@ -4,6 +4,7 @@ module Schematic
       COMPLEX = {
         :integer  => { :complex_type => 'Integer',  :xsd_type => 'xs:integer' }.freeze,
         :float    => { :complex_type => 'Float',    :xsd_type => 'xs:float' }.freeze,
+        :decimal  => { :complex_type => 'Decimal',  :xsd_type => 'xs:decimal' }.freeze,
         :string   => { :complex_type => 'String',   :xsd_type => 'xs:string' }.freeze,
         :text     => { :complex_type => 'Text',     :xsd_type => 'xs:string' }.freeze,
         :datetime => { :complex_type => 'DateTime', :xsd_type => 'xs:dateTime' }.freeze,

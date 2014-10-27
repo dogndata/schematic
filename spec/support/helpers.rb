@@ -51,6 +51,14 @@ def generate_xsd_for_model(model, header_element = nil)
   </xs:extension>
   </xs:simpleContent>
   </xs:complexType>
+  <xs:complexType name="Decimal">
+  <xs:simpleContent>
+  <xs:extension base="xs:decimal">
+  <xs:attribute name="type" type="xs:string" use="optional"/>
+  <xs:attribute name="nil" type="xs:boolean" use="optional"/>
+  </xs:extension>
+  </xs:simpleContent>
+  </xs:complexType>
   <xs:complexType name="String">
   <xs:simpleContent>
   <xs:extension base="xs:string">
