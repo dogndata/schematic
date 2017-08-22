@@ -12,7 +12,7 @@ describe Schematic::Serializers::Xsd do
 
           model do
             self.primary_key = :title
-            validate :title, :presence => true, :allow_blank => true
+            validates :title, :presence => true, :allow_blank => true
           end
         end
 
