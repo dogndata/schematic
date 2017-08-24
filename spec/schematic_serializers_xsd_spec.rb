@@ -470,7 +470,7 @@ describe Schematic::Serializers::Xsd do
           table do |t|
             t.string :address
             t.integer :price
-            t.belongs_to :homeowner, polymorphic: true
+            t.belongs_to :homeowner, polymorphic: true, index: { name: 'index_houses_on_homeowner'}
           end
           model do
             belongs_to :homeowner, polymorphic: true
