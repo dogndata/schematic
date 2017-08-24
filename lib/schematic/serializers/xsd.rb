@@ -5,7 +5,7 @@ module Schematic
   module Serializers
     module Xsd
       def self.extended(klass)
-        raise ClassMissingXmlSerializer unless klass.ancestors.include?(ActiveModel::Serializers::Xml)
+        raise ClassMissingXmlSerializer unless klass.instance_methods.include?(:to_xml)
         raise ClassMissingAttributes unless klass.instance_methods.include?(:attributes)
       end
 
