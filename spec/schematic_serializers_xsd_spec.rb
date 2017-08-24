@@ -85,6 +85,14 @@ describe Schematic::Serializers::Xsd do
             def to_xml(options)
               super({:methods => [:additional_method_array]}.merge(options))
             end
+
+            def method_is_also_columns=(values)
+              @method_is_also_columns = values.join
+            end
+
+            def method_is_also_columns
+              @method_is_also_columns.split
+            end
           end
 
         end
