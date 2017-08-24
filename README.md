@@ -98,7 +98,7 @@ end
 
 ## Requirements
 
-- ActiveRecord 4.x
+- ActiveRecord 5.x
 
 ## License
 
