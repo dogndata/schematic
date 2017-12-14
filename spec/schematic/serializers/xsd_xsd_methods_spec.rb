@@ -101,7 +101,7 @@ describe Schematic::Serializers::Xsd do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, xsd)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         valid_instance = SomeModel.new(:foo_bar => 1)
         xml = [valid_instance].to_xml
         expect {
@@ -169,7 +169,7 @@ describe Schematic::Serializers::Xsd do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, xsd)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         valid_instance = SomeModel.new(:bar => 'b')
         xml = [valid_instance].to_xml
         expect {
@@ -248,7 +248,7 @@ describe Schematic::Serializers::Xsd do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, SomeModel.to_xsd)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
 
         instance = SomeModel.new(:foo => ['1', '2'])
         xml = [instance].to_xml

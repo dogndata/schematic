@@ -44,7 +44,7 @@ describe Schematic::Serializers::Xsd do
           xml = [invalid_instance].to_xml
           expect {
             validate_xml_against_xsd(xml, subject)
-          }.to raise_error
+          }.to raise_error RSpec::Expectations::ExpectationNotMetError
 
           instance = SomeClass.new
           instance.attributes = { 'foo' => 'bar' }

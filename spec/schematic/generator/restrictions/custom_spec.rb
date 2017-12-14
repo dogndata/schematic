@@ -32,12 +32,12 @@ describe "Schematic::Generator::Restrictions::Custom" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         invalid_instance = CustomModel.new(:title => 'happytoday')
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         valid_instance = CustomModel.new(:title => 'iamcrazytoday')
         xml = [valid_instance].to_xml
         expect {

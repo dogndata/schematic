@@ -31,7 +31,7 @@ describe "Schematic::Generator::Restrictions::Mixin" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         valid_instance = TestModel.new(:title => 'cheese')
         xml = [valid_instance].to_xml
         expect {

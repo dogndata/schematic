@@ -42,7 +42,7 @@ describe "Schematic::Generator::Restrictions::Enumeration" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         valid_instance = EnumerationModel.new(:title => 'a',
                                               :should_be_skipped => 'a',
                                               :should_also_be_skipped => 'a',

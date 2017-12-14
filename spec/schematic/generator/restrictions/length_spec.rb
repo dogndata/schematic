@@ -20,12 +20,12 @@ describe "Schematic::Generator::Restrictions::Length" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
       end
     end
 
@@ -47,12 +47,12 @@ describe "Schematic::Generator::Restrictions::Length" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
         invalid_instance = LengthModelRange.new(:title => 'A' * 21)
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
       end
     end
 
@@ -74,7 +74,7 @@ describe "Schematic::Generator::Restrictions::Length" do
         xml = [invalid_instance].to_xml
         expect {
           validate_xml_against_xsd(xml, subject)
-        }.to raise_error
+        }.to raise_error RSpec::Expectations::ExpectationNotMetError
       end
     end
 
@@ -97,7 +97,7 @@ describe "Schematic::Generator::Restrictions::Length" do
           xml = [invalid_instance].to_xml
           expect {
             validate_xml_against_xsd(xml, subject)
-          }.to raise_error
+          }.to raise_error RSpec::Expectations::ExpectationNotMetError
         end
 
         it "should mark that the field minimum occurrences is 0 but still list the length" do
